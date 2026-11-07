@@ -1,64 +1,22 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import { useTranslations } from "next-intl";
-
-const STORAGE_KEY = "ez2h-theme";
-type Resolved = "light" | "dark";
-
-function readResolved(): Resolved {
-  try {
-    const t = localStorage.getItem(STORAGE_KEY);
-    if (t === "dark") return "dark";
-    if (t === "light") return "light";
-  } catch {
-    /* ignore */
-  }
-  if (typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches) {
-    return "dark";
-  }
-  return "light";
-}
-
-function apply(resolved: Resolved) {
-  document.documentElement.classList.toggle("dark", resolved === "dark");
-}
+import {
+  applyThemeClass,
+  persistResolvedTheme,
+  type ResolvedTheme,
+} from "@/lib/theme-storage";
+import { useResolvedTheme } from "@/hooks/use-resolved-theme";
 
 export function ThemeToggle() {
   const t = useTranslations("theme");
-  const [resolved, setResolved] = useState<Resolved>("light");
-
-  useEffect(() => {
-    const next = readResolved();
-    setResolved(next);
-    apply(next);
-
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const onSystemChange = () => {
-      try {
-        if (localStorage.getItem(STORAGE_KEY) === "light" || localStorage.getItem(STORAGE_KEY) === "dark") {
-          return;
-        }
-      } catch {
-        /* ignore */
-      }
-      const sys = mq.matches ? "dark" : "light";
-      setResolved(sys);
-      apply(sys);
-    };
-    mq.addEventListener("change", onSystemChange);
-    return () => mq.removeEventListener("change", onSystemChange);
-  }, []);
+  const resolved = useResolvedTheme();
 
   const toggle = useCallback(() => {
-    const next: Resolved = resolved === "dark" ? "light" : "dark";
-    try {
-      localStorage.setItem(STORAGE_KEY, next);
-    } catch {
-      /* ignore */
-    }
-    setResolved(next);
-    apply(next);
+    const next: ResolvedTheme = resolved === "dark" ? "light" : "dark";
+    persistResolvedTheme(next);
+    applyThemeClass(next);
   }, [resolved]);
 
   const isDark = resolved === "dark";

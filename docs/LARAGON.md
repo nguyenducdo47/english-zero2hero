@@ -31,6 +31,19 @@ GOOGLE_REDIRECT_URI=http://localhost:8000/api/v1/auth/google/callback
 FRONTEND_URL=http://localhost:3000
 ```
 
+Có thể cấu hình lại qua web **`/admin`** (tab Tích hợp) — secret/mật khẩu lưu DB đã mã hóa (`APP_KEY`). Cần tài khoản `users.is_admin = 1` (dev login local gán sẵn admin).
+
+Seeder mặc định (`php artisan db:seed` hoặc `--class=AdminUserSeeder`):
+
+- Email: `ADMIN_EMAIL` (mặc định `admin@english-zero2hero.local`)
+- Mật khẩu: `ADMIN_PASSWORD` (mặc định `password` — **đổi trên production**)
+
+Hoặc thủ công:
+
+```sql
+UPDATE users SET is_admin = 1 WHERE email = 'your@email.com';
+```
+
 ## AI (tuỳ chọn)
 
 ```env

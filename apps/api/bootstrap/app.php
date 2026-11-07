@@ -14,6 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
         apiPrefix: 'api',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\EnsureUserIsAdmin::class,
+        ]);
         // Next.js gọi API bằng Bearer token (localStorage), không dùng cookie SPA → bỏ stateful/CSRF.
         $middleware->api(prepend: [
             \App\Http\Middleware\SetApiLocale::class,

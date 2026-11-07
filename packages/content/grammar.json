@@ -1,210 +1,569 @@
 {
-  "groups": [
-    {
-      "slug": "present",
-      "name_vi": "Nhóm hiện tại",
-      "name_en": "Present tenses",
-      "sort_order": 1
-    },
-    {
-      "slug": "past",
-      "name_vi": "Nhóm quá khứ",
-      "name_en": "Past tenses",
-      "sort_order": 2
-    },
-    {
-      "slug": "future",
-      "name_vi": "Nhóm tương lai",
-      "name_en": "Future tenses",
-      "sort_order": 3
-    },
-    {
-      "slug": "perfect-continuous",
-      "name_vi": "Hoàn thành tiếp diễn & tổng hợp",
-      "name_en": "Perfect continuous",
-      "sort_order": 4
-    }
-  ],
-  "tenses": [
-    {
-      "slug": "present-simple",
-      "name_en": "Present Simple",
-      "name_vi": "Hiện tại đơn",
-      "group_slug": "present",
-      "sort_order": 1,
-      "structure": "Affirmative: S + V(s/es). Negative: S + do/does not + V. Question: Do/Does + S + V?",
-      "usage_vi": ["Diễn tả thói quen, hành động lặp lại", "Sự thật hiển nhiên, chân lý", "Lịch trình cố định (xe buýt, tàu)"],
-      "signals": ["every day", "usually", "often", "always", "sometimes", "never"],
-      "pitfalls_vi": "Ngôi thứ 3 số ít phải thêm -s/-es; không dùng -ing.",
-      "examples": [
-        { "en": "She works in Hanoi.", "vi": "Cô ấy làm việc ở Hà Nội." },
-        { "en": "I don't like coffee.", "vi": "Tôi không thích cà phê." }
-      ]
-    },
-    {
-      "slug": "present-continuous",
-      "name_en": "Present Continuous",
-      "name_vi": "Hiện tại tiếp diễn",
-      "group_slug": "present",
-      "sort_order": 2,
-      "structure": "S + am/is/are + V-ing",
-      "usage_vi": ["Hành động đang xảy ra ngay lúc nói", "Kế hoạch đã sắp xếp trong tương lai gần", "Tình huống tạm thời"],
-      "signals": ["now", "right now", "at the moment", "currently"],
-      "pitfalls_vi": "Không dùng với động từ chỉ trạng thái (know, like, need) trừ khi nhấn mạnh tạm thời.",
-      "examples": [
-        { "en": "They are studying English now.", "vi": "Họ đang học tiếng Anh bây giờ." },
-        { "en": "I am meeting her tomorrow.", "vi": "Tôi sẽ gặp cô ấy vào ngày mai (đã hẹn)." }
-      ]
-    },
-    {
-      "slug": "present-perfect",
-      "name_en": "Present Perfect",
-      "name_vi": "Hiện tại hoàn thành",
-      "group_slug": "present",
-      "sort_order": 3,
-      "structure": "S + have/has + V3 (past participle)",
-      "usage_vi": ["Hành động xảy ra trong quá khứ nhưng liên quan hiện tại", "Kinh nghiệm sống (ever/never)", "Kết quả hiện tại của quá khứ"],
-      "signals": ["just", "already", "yet", "ever", "never", "since", "for"],
-      "pitfalls_vi": "Không dùng với mốc thời gian đã kết thúc (yesterday, last week) — dùng past simple.",
-      "examples": [
-        { "en": "I have lived here for five years.", "vi": "Tôi đã sống ở đây được năm năm (và vẫn đang sống)." },
-        { "en": "She has just finished her homework.", "vi": "Cô ấy vừa mới làm xong bài tập." }
-      ]
-    },
-    {
-      "slug": "past-simple",
-      "name_en": "Past Simple",
-      "name_vi": "Quá khứ đơn",
-      "group_slug": "past",
-      "sort_order": 4,
-      "structure": "S + V2 / S + did not + V / Did + S + V?",
-      "usage_vi": ["Hành động đã hoàn tất tại thời điểm trong quá khứ", "Chuỗi sự kiện tuần tự"],
-      "signals": ["yesterday", "last week", "ago", "in 2010", "when"],
-      "pitfalls_vi": "Động từ chia V2; câu hỏi/phủ định dùng did + nguyên thể.",
-      "examples": [
-        { "en": "We visited Da Nang last summer.", "vi": "Chúng tôi đã đến Đà Nẵng mùa hè năm ngoái." },
-        { "en": "Did you watch the film?", "vi": "Bạn có xem bộ phim không?" }
-      ]
-    },
-    {
-      "slug": "past-continuous",
-      "name_en": "Past Continuous",
-      "name_vi": "Quá khứ tiếp diễn",
-      "group_slug": "past",
-      "sort_order": 5,
-      "structure": "S + was/were + V-ing",
-      "usage_vi": ["Hành động đang diễn ra tại một thời điểm trong quá khứ", "Hành động nền bị hành động khác cắt ngang (past simple)"],
-      "signals": ["while", "when", "at 8 p.m. yesterday", "all day"],
-      "pitfalls_vi": "Không dùng cho mọi hành động ngắn đã xong.",
-      "examples": [
-        { "en": "I was reading when he called.", "vi": "Tôi đang đọc sách khi anh ấy gọi." },
-        { "en": "It was raining all morning.", "vi": "Trời mưa suốt buổi sáng." }
-      ]
-    },
-    {
-      "slug": "past-perfect",
-      "name_en": "Past Perfect",
-      "name_vi": "Quá khứ hoàn thành",
-      "group_slug": "past",
-      "sort_order": 6,
-      "structure": "S + had + V3",
-      "usage_vi": ["Hành động xảy ra trước một hành động/mốc khác trong quá khứ"],
-      "signals": ["before", "after", "by the time", "already", "never ... before"],
-      "pitfalls_vi": "Chỉ cần khi cần làm rõ thứ tự hai sự kiện quá khứ.",
-      "examples": [
-        { "en": "She had left before I arrived.", "vi": "Cô ấy đã rời đi trước khi tôi đến." },
-        { "en": "They had never seen snow until last year.", "vi": "Họ chưa từng thấy tuyết cho đến năm ngoái." }
-      ]
-    },
-    {
-      "slug": "future-simple",
-      "name_en": "Future Simple (will)",
-      "name_vi": "Tương lai đơn",
-      "group_slug": "future",
-      "sort_order": 7,
-      "structure": "S + will + V / S + won't + V / Will + S + V?",
-      "usage_vi": ["Quyết định tức thì", "Dự đoán không căn cứ kế hoạch", "Hứa, đề nghị, từ chối"],
-      "signals": ["tomorrow", "next year", "I think", "probably"],
-      "pitfalls_vi": "Không dùng will cho kế hoạch đã chắc chắn — cân nhắc going to hoặc present continuous.",
-      "examples": [
-        { "en": "I will help you with that.", "vi": "Tôi sẽ giúp bạn việc đó." },
-        { "en": "It will probably rain tonight.", "vi": "Tối nay trời có lẽ sẽ mưa." }
-      ]
-    },
-    {
-      "slug": "future-continuous",
-      "name_en": "Future Continuous",
-      "name_vi": "Tương lai tiếp diễn",
-      "group_slug": "future",
-      "sort_order": 8,
-      "structure": "S + will be + V-ing",
-      "usage_vi": ["Hành động sẽ đang diễn ra tại một thời điểm trong tương lai"],
-      "signals": ["this time tomorrow", "at 9 p.m. next Monday"],
-      "pitfalls_vi": "Nhấn mạnh quá trình, không phải hoàn thành.",
-      "examples": [
-        { "en": "This time next week I will be flying to Tokyo.", "vi": "Đúng giờ này tuần sau tôi sẽ đang bay đến Tokyo." },
-        { "en": "They will be working all day tomorrow.", "vi": "Ngày mai họ sẽ làm việc cả ngày." }
-      ]
-    },
-    {
-      "slug": "future-perfect",
-      "name_en": "Future Perfect",
-      "name_vi": "Tương lai hoàn thành",
-      "group_slug": "future",
-      "sort_order": 9,
-      "structure": "S + will have + V3",
-      "usage_vi": ["Hành động sẽ hoàn tất trước một mốc trong tương lai"],
-      "signals": ["by", "by the time", "before"],
-      "pitfalls_vi": "Thường đi với by + mốc thời gian.",
-      "examples": [
-        { "en": "I will have finished the course by June.", "vi": "Tôi sẽ hoàn thành khóa học trước tháng Sáu." },
-        { "en": "She will have left by the time you arrive.", "vi": "Cô ấy sẽ đã rời đi trước khi bạn tới." }
-      ]
-    },
-    {
-      "slug": "present-perfect-continuous",
-      "name_en": "Present Perfect Continuous",
-      "name_vi": "Hiện tại hoàn thành tiếp diễn",
-      "group_slug": "perfect-continuous",
-      "sort_order": 10,
-      "structure": "S + have/has been + V-ing",
-      "usage_vi": ["Nhấn mạnh độ dài của hành động bắt đầu trong quá khứ và có thể còn tiếp diễn", "Hậu quả hiện tại"],
-      "signals": ["for", "since", "all day", "lately"],
-      "pitfalls_vi": "Không dùng với trạng từ chỉ điểm số; tránh khi không cần nhấn duration.",
-      "examples": [
-        { "en": "I have been studying for three hours.", "vi": "Tôi đã học liên tục được ba giờ (và có thể vẫn đang học)." },
-        { "en": "It has been raining since morning.", "vi": "Trời đã mưa từ sáng đến giờ." }
-      ]
-    },
-    {
-      "slug": "past-perfect-continuous",
-      "name_en": "Past Perfect Continuous",
-      "name_vi": "Quá khứ hoàn thành tiếp diễn",
-      "group_slug": "perfect-continuous",
-      "sort_order": 11,
-      "structure": "S + had been + V-ing",
-      "usage_vi": ["Nhấn mạnh quá trình kéo dài trước một hành động/mốc khác trong quá khứ"],
-      "signals": ["for", "since", "before", "by the time"],
-      "pitfalls_vi": "Ít gặp trong giao tiếp hàng ngày; dùng khi cần làm rõ duration.",
-      "examples": [
-        { "en": "He had been driving for hours before he stopped.", "vi": "Anh ấy đã lái xe hàng giờ trước khi dừng lại." },
-        { "en": "They had been waiting since noon.", "vi": "Họ đã chờ từ trưa." }
-      ]
-    },
-    {
-      "slug": "future-perfect-continuous",
-      "name_en": "Future Perfect Continuous",
-      "name_vi": "Tương lai hoàn thành tiếp diễn",
-      "group_slug": "perfect-continuous",
-      "sort_order": 12,
-      "structure": "S + will have been + V-ing",
-      "usage_vi": ["Nhấn mạnh quá trình sẽ kéo dài đến một mốc trong tương lai"],
-      "signals": ["for", "by", "by the time"],
-      "pitfalls_vi": "Hiếm trong đề thi cơ bản; thường gặp ở trình độ cao.",
-      "examples": [
-        { "en": "By next year, I will have been working here for ten years.", "vi": "Đến năm sau, tôi sẽ đã làm việc ở đây được mười năm." },
-        { "en": "She will have been studying for six hours by 10 p.m.", "vi": "Đến 10 giờ tối cô ấy sẽ đã học liên tục sáu giờ." }
-      ]
-    }
-  ]
+    "groups": [
+        {
+            "slug": "present",
+            "name_vi": "Nhóm hiện tại",
+            "name_en": "Present tenses",
+            "sort_order": 1,
+            "translations": {
+                "vi": {
+                    "name": "Nhóm hiện tại"
+                },
+                "en": {
+                    "name": "Present tenses"
+                }
+            }
+        },
+        {
+            "slug": "past",
+            "name_vi": "Nhóm quá khứ",
+            "name_en": "Past tenses",
+            "sort_order": 2,
+            "translations": {
+                "vi": {
+                    "name": "Nhóm quá khứ"
+                },
+                "en": {
+                    "name": "Past tenses"
+                }
+            }
+        },
+        {
+            "slug": "future",
+            "name_vi": "Nhóm tương lai",
+            "name_en": "Future tenses",
+            "sort_order": 3,
+            "translations": {
+                "vi": {
+                    "name": "Nhóm tương lai"
+                },
+                "en": {
+                    "name": "Future tenses"
+                }
+            }
+        },
+        {
+            "slug": "perfect-continuous",
+            "name_vi": "Hoàn thành tiếp diễn & tổng hợp",
+            "name_en": "Perfect continuous",
+            "sort_order": 4,
+            "translations": {
+                "vi": {
+                    "name": "Hoàn thành tiếp diễn & tổng hợp"
+                },
+                "en": {
+                    "name": "Perfect continuous"
+                }
+            }
+        }
+    ],
+    "tenses": [
+        {
+            "slug": "present-simple",
+            "name_en": "Present Simple",
+            "name_vi": "Hiện tại đơn",
+            "group_slug": "present",
+            "sort_order": 1,
+            "structure": "Affirmative: S + V(s\/es). Negative: S + do\/does not + V. Question: Do\/Does + S + V?",
+            "usage_vi": [
+                "Diễn tả thói quen, hành động lặp lại",
+                "Sự thật hiển nhiên, chân lý",
+                "Lịch trình cố định (xe buýt, tàu)"
+            ],
+            "signals": [
+                "every day",
+                "usually",
+                "often",
+                "always",
+                "sometimes",
+                "never"
+            ],
+            "pitfalls_vi": "<p>Ngôi thứ 3 số ít phải thêm -s\/-es; không dùng -ing.<\/p>",
+            "examples": [
+                {
+                    "en": "She works in Hanoi.",
+                    "vi": "Cô ấy làm việc ở Hà Nội."
+                },
+                {
+                    "en": "I don't like coffee.",
+                    "vi": "Tôi không thích cà phê."
+                }
+            ],
+            "translations": {
+                "vi": {
+                    "name": "Hiện tại đơn",
+                    "usage": [
+                        "Diễn tả thói quen, hành động lặp lại",
+                        "Sự thật hiển nhiên, chân lý",
+                        "Lịch trình cố định (xe buýt, tàu)"
+                    ],
+                    "pitfalls": "<p>Ngôi thứ 3 số ít phải thêm -s\/-es; không dùng -ing.<\/p>"
+                },
+                "en": {
+                    "name": "Present Simple",
+                    "usage": [],
+                    "pitfalls": null
+                }
+            }
+        },
+        {
+            "slug": "present-continuous",
+            "name_en": "Present Continuous",
+            "name_vi": "Hiện tại tiếp diễn",
+            "group_slug": "present",
+            "sort_order": 2,
+            "structure": "S + am\/is\/are + V-ing",
+            "usage_vi": [
+                "Hành động đang xảy ra ngay lúc nói",
+                "Kế hoạch đã sắp xếp trong tương lai gần",
+                "Tình huống tạm thời"
+            ],
+            "signals": [
+                "now",
+                "right now",
+                "at the moment",
+                "currently"
+            ],
+            "pitfalls_vi": "Không dùng với động từ chỉ trạng thái (know, like, need) trừ khi nhấn mạnh tạm thời.",
+            "examples": [
+                {
+                    "en": "They are studying English now.",
+                    "vi": "Họ đang học tiếng Anh bây giờ."
+                },
+                {
+                    "en": "I am meeting her tomorrow.",
+                    "vi": "Tôi sẽ gặp cô ấy vào ngày mai (đã hẹn)."
+                }
+            ],
+            "translations": {
+                "vi": {
+                    "name": "Hiện tại tiếp diễn",
+                    "usage": [
+                        "Hành động đang xảy ra ngay lúc nói",
+                        "Kế hoạch đã sắp xếp trong tương lai gần",
+                        "Tình huống tạm thời"
+                    ],
+                    "pitfalls": "Không dùng với động từ chỉ trạng thái (know, like, need) trừ khi nhấn mạnh tạm thời."
+                },
+                "en": {
+                    "name": "Present Continuous"
+                }
+            }
+        },
+        {
+            "slug": "present-perfect",
+            "name_en": "Present Perfect",
+            "name_vi": "Hiện tại hoàn thành",
+            "group_slug": "present",
+            "sort_order": 3,
+            "structure": "S + have\/has + V3 (past participle)",
+            "usage_vi": [
+                "Hành động xảy ra trong quá khứ nhưng liên quan hiện tại",
+                "Kinh nghiệm sống (ever\/never)",
+                "Kết quả hiện tại của quá khứ"
+            ],
+            "signals": [
+                "just",
+                "already",
+                "yet",
+                "ever",
+                "never",
+                "since",
+                "for"
+            ],
+            "pitfalls_vi": "Không dùng với mốc thời gian đã kết thúc (yesterday, last week) — dùng past simple.",
+            "examples": [
+                {
+                    "en": "I have lived here for five years.",
+                    "vi": "Tôi đã sống ở đây được năm năm (và vẫn đang sống)."
+                },
+                {
+                    "en": "She has just finished her homework.",
+                    "vi": "Cô ấy vừa mới làm xong bài tập."
+                }
+            ],
+            "translations": {
+                "vi": {
+                    "name": "Hiện tại hoàn thành",
+                    "usage": [
+                        "Hành động xảy ra trong quá khứ nhưng liên quan hiện tại",
+                        "Kinh nghiệm sống (ever\/never)",
+                        "Kết quả hiện tại của quá khứ"
+                    ],
+                    "pitfalls": "Không dùng với mốc thời gian đã kết thúc (yesterday, last week) — dùng past simple."
+                },
+                "en": {
+                    "name": "Present Perfect"
+                }
+            }
+        },
+        {
+            "slug": "past-simple",
+            "name_en": "Past Simple",
+            "name_vi": "Quá khứ đơn",
+            "group_slug": "past",
+            "sort_order": 4,
+            "structure": "S + V2 \/ S + did not + V \/ Did + S + V?",
+            "usage_vi": [
+                "Hành động đã hoàn tất tại thời điểm trong quá khứ",
+                "Chuỗi sự kiện tuần tự"
+            ],
+            "signals": [
+                "yesterday",
+                "last week",
+                "ago",
+                "in 2010",
+                "when"
+            ],
+            "pitfalls_vi": "Động từ chia V2; câu hỏi\/phủ định dùng did + nguyên thể.",
+            "examples": [
+                {
+                    "en": "We visited Da Nang last summer.",
+                    "vi": "Chúng tôi đã đến Đà Nẵng mùa hè năm ngoái."
+                },
+                {
+                    "en": "Did you watch the film?",
+                    "vi": "Bạn có xem bộ phim không?"
+                }
+            ],
+            "translations": {
+                "vi": {
+                    "name": "Quá khứ đơn",
+                    "usage": [
+                        "Hành động đã hoàn tất tại thời điểm trong quá khứ",
+                        "Chuỗi sự kiện tuần tự"
+                    ],
+                    "pitfalls": "Động từ chia V2; câu hỏi\/phủ định dùng did + nguyên thể."
+                },
+                "en": {
+                    "name": "Past Simple"
+                }
+            }
+        },
+        {
+            "slug": "past-continuous",
+            "name_en": "Past Continuous",
+            "name_vi": "Quá khứ tiếp diễn",
+            "group_slug": "past",
+            "sort_order": 5,
+            "structure": "S + was\/were + V-ing",
+            "usage_vi": [
+                "Hành động đang diễn ra tại một thời điểm trong quá khứ",
+                "Hành động nền bị hành động khác cắt ngang (past simple)"
+            ],
+            "signals": [
+                "while",
+                "when",
+                "at 8 p.m. yesterday",
+                "all day"
+            ],
+            "pitfalls_vi": "Không dùng cho mọi hành động ngắn đã xong.",
+            "examples": [
+                {
+                    "en": "I was reading when he called.",
+                    "vi": "Tôi đang đọc sách khi anh ấy gọi."
+                },
+                {
+                    "en": "It was raining all morning.",
+                    "vi": "Trời mưa suốt buổi sáng."
+                }
+            ],
+            "translations": {
+                "vi": {
+                    "name": "Quá khứ tiếp diễn",
+                    "usage": [
+                        "Hành động đang diễn ra tại một thời điểm trong quá khứ",
+                        "Hành động nền bị hành động khác cắt ngang (past simple)"
+                    ],
+                    "pitfalls": "Không dùng cho mọi hành động ngắn đã xong."
+                },
+                "en": {
+                    "name": "Past Continuous"
+                }
+            }
+        },
+        {
+            "slug": "past-perfect",
+            "name_en": "Past Perfect",
+            "name_vi": "Quá khứ hoàn thành",
+            "group_slug": "past",
+            "sort_order": 6,
+            "structure": "S + had + V3",
+            "usage_vi": [
+                "Hành động xảy ra trước một hành động\/mốc khác trong quá khứ"
+            ],
+            "signals": [
+                "before",
+                "after",
+                "by the time",
+                "already",
+                "never ... before"
+            ],
+            "pitfalls_vi": "Chỉ cần khi cần làm rõ thứ tự hai sự kiện quá khứ.",
+            "examples": [
+                {
+                    "en": "She had left before I arrived.",
+                    "vi": "Cô ấy đã rời đi trước khi tôi đến."
+                },
+                {
+                    "en": "They had never seen snow until last year.",
+                    "vi": "Họ chưa từng thấy tuyết cho đến năm ngoái."
+                }
+            ],
+            "translations": {
+                "vi": {
+                    "name": "Quá khứ hoàn thành",
+                    "usage": [
+                        "Hành động xảy ra trước một hành động\/mốc khác trong quá khứ"
+                    ],
+                    "pitfalls": "Chỉ cần khi cần làm rõ thứ tự hai sự kiện quá khứ."
+                },
+                "en": {
+                    "name": "Past Perfect"
+                }
+            }
+        },
+        {
+            "slug": "future-simple",
+            "name_en": "Future Simple (will)",
+            "name_vi": "Tương lai đơn",
+            "group_slug": "future",
+            "sort_order": 7,
+            "structure": "S + will + V \/ S + won't + V \/ Will + S + V?",
+            "usage_vi": [
+                "Quyết định tức thì",
+                "Dự đoán không căn cứ kế hoạch",
+                "Hứa, đề nghị, từ chối"
+            ],
+            "signals": [
+                "tomorrow",
+                "next year",
+                "I think",
+                "probably"
+            ],
+            "pitfalls_vi": "Không dùng will cho kế hoạch đã chắc chắn — cân nhắc going to hoặc present continuous.",
+            "examples": [
+                {
+                    "en": "I will help you with that.",
+                    "vi": "Tôi sẽ giúp bạn việc đó."
+                },
+                {
+                    "en": "It will probably rain tonight.",
+                    "vi": "Tối nay trời có lẽ sẽ mưa."
+                }
+            ],
+            "translations": {
+                "vi": {
+                    "name": "Tương lai đơn",
+                    "usage": [
+                        "Quyết định tức thì",
+                        "Dự đoán không căn cứ kế hoạch",
+                        "Hứa, đề nghị, từ chối"
+                    ],
+                    "pitfalls": "Không dùng will cho kế hoạch đã chắc chắn — cân nhắc going to hoặc present continuous."
+                },
+                "en": {
+                    "name": "Future Simple (will)"
+                }
+            }
+        },
+        {
+            "slug": "future-continuous",
+            "name_en": "Future Continuous",
+            "name_vi": "Tương lai tiếp diễn",
+            "group_slug": "future",
+            "sort_order": 8,
+            "structure": "S + will be + V-ing",
+            "usage_vi": [
+                "Hành động sẽ đang diễn ra tại một thời điểm trong tương lai"
+            ],
+            "signals": [
+                "this time tomorrow",
+                "at 9 p.m. next Monday"
+            ],
+            "pitfalls_vi": "Nhấn mạnh quá trình, không phải hoàn thành.",
+            "examples": [
+                {
+                    "en": "This time next week I will be flying to Tokyo.",
+                    "vi": "Đúng giờ này tuần sau tôi sẽ đang bay đến Tokyo."
+                },
+                {
+                    "en": "They will be working all day tomorrow.",
+                    "vi": "Ngày mai họ sẽ làm việc cả ngày."
+                }
+            ],
+            "translations": {
+                "vi": {
+                    "name": "Tương lai tiếp diễn",
+                    "usage": [
+                        "Hành động sẽ đang diễn ra tại một thời điểm trong tương lai"
+                    ],
+                    "pitfalls": "Nhấn mạnh quá trình, không phải hoàn thành."
+                },
+                "en": {
+                    "name": "Future Continuous"
+                }
+            }
+        },
+        {
+            "slug": "future-perfect",
+            "name_en": "Future Perfect",
+            "name_vi": "Tương lai hoàn thành",
+            "group_slug": "future",
+            "sort_order": 9,
+            "structure": "S + will have + V3",
+            "usage_vi": [
+                "Hành động sẽ hoàn tất trước một mốc trong tương lai"
+            ],
+            "signals": [
+                "by",
+                "by the time",
+                "before"
+            ],
+            "pitfalls_vi": "Thường đi với by + mốc thời gian.",
+            "examples": [
+                {
+                    "en": "I will have finished the course by June.",
+                    "vi": "Tôi sẽ hoàn thành khóa học trước tháng Sáu."
+                },
+                {
+                    "en": "She will have left by the time you arrive.",
+                    "vi": "Cô ấy sẽ đã rời đi trước khi bạn tới."
+                }
+            ],
+            "translations": {
+                "vi": {
+                    "name": "Tương lai hoàn thành",
+                    "usage": [
+                        "Hành động sẽ hoàn tất trước một mốc trong tương lai"
+                    ],
+                    "pitfalls": "Thường đi với by + mốc thời gian."
+                },
+                "en": {
+                    "name": "Future Perfect"
+                }
+            }
+        },
+        {
+            "slug": "present-perfect-continuous",
+            "name_en": "Present Perfect Continuous",
+            "name_vi": "Hiện tại hoàn thành tiếp diễn",
+            "group_slug": "perfect-continuous",
+            "sort_order": 10,
+            "structure": "S + have\/has been + V-ing",
+            "usage_vi": [
+                "Nhấn mạnh độ dài của hành động bắt đầu trong quá khứ và có thể còn tiếp diễn",
+                "Hậu quả hiện tại"
+            ],
+            "signals": [
+                "for",
+                "since",
+                "all day",
+                "lately"
+            ],
+            "pitfalls_vi": "Không dùng với trạng từ chỉ điểm số; tránh khi không cần nhấn duration.",
+            "examples": [
+                {
+                    "en": "I have been studying for three hours.",
+                    "vi": "Tôi đã học liên tục được ba giờ (và có thể vẫn đang học)."
+                },
+                {
+                    "en": "It has been raining since morning.",
+                    "vi": "Trời đã mưa từ sáng đến giờ."
+                }
+            ],
+            "translations": {
+                "vi": {
+                    "name": "Hiện tại hoàn thành tiếp diễn",
+                    "usage": [
+                        "Nhấn mạnh độ dài của hành động bắt đầu trong quá khứ và có thể còn tiếp diễn",
+                        "Hậu quả hiện tại"
+                    ],
+                    "pitfalls": "Không dùng với trạng từ chỉ điểm số; tránh khi không cần nhấn duration."
+                },
+                "en": {
+                    "name": "Present Perfect Continuous"
+                }
+            }
+        },
+        {
+            "slug": "past-perfect-continuous",
+            "name_en": "Past Perfect Continuous",
+            "name_vi": "Quá khứ hoàn thành tiếp diễn",
+            "group_slug": "perfect-continuous",
+            "sort_order": 11,
+            "structure": "S + had been + V-ing",
+            "usage_vi": [
+                "Nhấn mạnh quá trình kéo dài trước một hành động\/mốc khác trong quá khứ"
+            ],
+            "signals": [
+                "for",
+                "since",
+                "before",
+                "by the time"
+            ],
+            "pitfalls_vi": "Ít gặp trong giao tiếp hàng ngày; dùng khi cần làm rõ duration.",
+            "examples": [
+                {
+                    "en": "He had been driving for hours before he stopped.",
+                    "vi": "Anh ấy đã lái xe hàng giờ trước khi dừng lại."
+                },
+                {
+                    "en": "They had been waiting since noon.",
+                    "vi": "Họ đã chờ từ trưa."
+                }
+            ],
+            "translations": {
+                "vi": {
+                    "name": "Quá khứ hoàn thành tiếp diễn",
+                    "usage": [
+                        "Nhấn mạnh quá trình kéo dài trước một hành động\/mốc khác trong quá khứ"
+                    ],
+                    "pitfalls": "Ít gặp trong giao tiếp hàng ngày; dùng khi cần làm rõ duration."
+                },
+                "en": {
+                    "name": "Past Perfect Continuous"
+                }
+            }
+        },
+        {
+            "slug": "future-perfect-continuous",
+            "name_en": "Future Perfect Continuous",
+            "name_vi": "Tương lai hoàn thành tiếp diễn",
+            "group_slug": "perfect-continuous",
+            "sort_order": 12,
+            "structure": "S + will have been + V-ing",
+            "usage_vi": [
+                "Nhấn mạnh quá trình sẽ kéo dài đến một mốc trong tương lai"
+            ],
+            "signals": [
+                "for",
+                "by",
+                "by the time"
+            ],
+            "pitfalls_vi": "Hiếm trong đề thi cơ bản; thường gặp ở trình độ cao.",
+            "examples": [
+                {
+                    "en": "By next year, I will have been working here for ten years.",
+                    "vi": "Đến năm sau, tôi sẽ đã làm việc ở đây được mười năm."
+                },
+                {
+                    "en": "She will have been studying for six hours by 10 p.m.",
+                    "vi": "Đến 10 giờ tối cô ấy sẽ đã học liên tục sáu giờ."
+                }
+            ],
+            "translations": {
+                "vi": {
+                    "name": "Tương lai hoàn thành tiếp diễn",
+                    "usage": [
+                        "Nhấn mạnh quá trình sẽ kéo dài đến một mốc trong tương lai"
+                    ],
+                    "pitfalls": "Hiếm trong đề thi cơ bản; thường gặp ở trình độ cao."
+                },
+                "en": {
+                    "name": "Future Perfect Continuous"
+                }
+            }
+        }
+    ]
 }

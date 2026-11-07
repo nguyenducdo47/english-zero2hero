@@ -1,27 +1,36 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Noto_Sans, Plus_Jakarta_Sans } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getLocale, getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { SiteHeader } from "@/components/site-header";
-import { ThemeScript } from "@/components/theme-script";
+import { ThemeInit } from "@/components/theme-init";
+import { Toaster } from "@/components/ui/sonner";
 import { routing } from "@/i18n/routing";
 import { staticSiteMetadata } from "@/lib/site-metadata";
 import "../globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const inter = Inter({
+  subsets: ["latin", "vietnamese"],
+  variable: "--font-sans",
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin", "vietnamese"],
+  variable: "--font-heading",
+  display: "swap",
+});
+
+const notoSans = Noto_Sans({
+  subsets: ["latin", "vietnamese"],
+  variable: "--font-ipa",
+  display: "swap",
 });
 
 type Props = {
   children: React.ReactNode;
 };
 
+/** Static defaults — dynamic SEO comes from portal page `generateMetadata` (cached API). */
 export const metadata = staticSiteMetadata;
 
 export function generateStaticParams() {
@@ -40,21 +49,17 @@ export default async function LocaleLayout({ children }: Props) {
   return (
     <html
       lang={locale}
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${plusJakarta.variable} ${notoSans.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <head>
-        <ThemeScript />
-      </head>
       <body
-        className="min-h-full flex flex-col bg-background text-foreground"
+        className="min-h-full bg-background text-foreground"
         suppressHydrationWarning
       >
+        <ThemeInit />
         <NextIntlClientProvider messages={messages}>
-          <SiteHeader />
-          <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
-            {children}
-          </main>
+          <Toaster />
+          {children}
         </NextIntlClientProvider>
       </body>
     </html>

@@ -28,4 +28,26 @@ class TenseGroupRepository extends BaseRepository
         /** @var TenseGroup */
         return $this->findBySlug($slug, ['localeEntries']);
     }
+
+    public function findBySlugOrFail(string $slug): TenseGroup
+    {
+        /** @var TenseGroup */
+        return $this->query()->where('slug', $slug)->firstOrFail();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection<int, TenseGroup>
+     */
+    public function allForAdminIndex()
+    {
+        return $this->query()->withCount('tenses')->orderBy('sort_order')->get();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection<int, TenseGroup>
+     */
+    public function allOrderedForCatalog()
+    {
+        return $this->query()->orderBy('sort_order')->get();
+    }
 }

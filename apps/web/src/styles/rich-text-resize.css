@@ -1,0 +1,112 @@
+/* TipTap ResizableNodeView — handles need explicit size (invisible by default). */
+
+.ProseMirror [data-resize-container] {
+  max-width: 100%;
+  margin: 0.25rem 0;
+}
+
+.ProseMirror [data-resize-wrapper] img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.ProseMirror [data-resize-container]:not(.ProseMirror-selectednode) [data-resize-handle] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ProseMirror [data-resize-container].ProseMirror-selectednode {
+  outline: 2px solid var(--ring, #2563eb);
+  outline-offset: 2px;
+}
+
+.ProseMirror [data-resize-handle] {
+  z-index: 30;
+  background: var(--primary, #2563eb);
+  border: 2px solid var(--background, #fff);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--foreground, #000) 20%, transparent);
+  pointer-events: auto;
+  box-sizing: border-box;
+}
+
+.ProseMirror [data-resize-handle="top-left"],
+.ProseMirror [data-resize-handle="top-right"],
+.ProseMirror [data-resize-handle="bottom-left"],
+.ProseMirror [data-resize-handle="bottom-right"] {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+}
+
+.ProseMirror [data-resize-handle="top-left"] {
+  top: -6px !important;
+  left: -6px !important;
+  cursor: nwse-resize;
+}
+
+.ProseMirror [data-resize-handle="top-right"] {
+  top: -6px !important;
+  right: -6px !important;
+  cursor: nesw-resize;
+}
+
+.ProseMirror [data-resize-handle="bottom-left"] {
+  bottom: -6px !important;
+  left: -6px !important;
+  cursor: nesw-resize;
+}
+
+.ProseMirror [data-resize-handle="bottom-right"] {
+  bottom: -6px !important;
+  right: -6px !important;
+  cursor: nwse-resize;
+}
+
+.ProseMirror [data-resize-handle="left"],
+.ProseMirror [data-resize-handle="right"] {
+  width: 7px;
+  top: 0 !important;
+  bottom: 0 !important;
+  height: auto !important;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.ProseMirror [data-resize-handle="left"] {
+  left: -4px !important;
+  cursor: ew-resize;
+  border-radius: 3px;
+}
+
+.ProseMirror [data-resize-handle="right"] {
+  right: -4px !important;
+  cursor: ew-resize;
+  border-radius: 3px;
+}
+
+.ProseMirror [data-resize-handle="top"],
+.ProseMirror [data-resize-handle="bottom"] {
+  height: 7px;
+  left: 0 !important;
+  right: 0 !important;
+  width: auto !important;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.ProseMirror [data-resize-handle="top"] {
+  top: -4px !important;
+  cursor: ns-resize;
+  border-radius: 3px;
+}
+
+.ProseMirror [data-resize-handle="bottom"] {
+  bottom: -4px !important;
+  cursor: ns-resize;
+  border-radius: 3px;
+}
+
+.ProseMirror [data-resize-container][data-resize-state="true"] {
+  outline-color: var(--primary, #2563eb);
+}

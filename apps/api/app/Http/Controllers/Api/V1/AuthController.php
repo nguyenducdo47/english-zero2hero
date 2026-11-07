@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Http\Requests\Api\V1\Auth\LoginRequest;
+use App\Http\Requests\Api\V1\Auth\RegisterRequest;
+use App\Services\AuthService;
+use App\Services\SettingsService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 
 /**
@@ -15,37 +17,52 @@ use Laravel\Socialite\Facades\Socialite;
  */
 class AuthController extends Controller
 {
+    public function __construct(
+        private readonly AuthService $auth,
+        private readonly SettingsService $settings,
+    ) {}
+
     /**
-     * @OA\Get(path="/api/v1/auth/google/redirect", tags={"Auth"}, summary="Google OAuth redirect URL")
+     * @OA\Post(path="/api/v1/auth/register", tags={"Auth"}, summary="Email/password sign-up")
      */
+    public function register(RegisterRequest $request): JsonResponse
+    {
+        $result = $this->auth->register($request->validated());
+
+        return response()->json($result, 201);
+    }
+
     /**
-     * Local-only: issue a Sanctum token without Google OAuth (for UI dev login).
+     * @OA\Post(path="/api/v1/auth/login", tags={"Auth"}, summary="Email/password sign-in")
      */
+    public function login(LoginRequest $request): JsonResponse
+    {
+        return response()->json($this->auth->login($request->validated()));
+    }
+
     public function devLogin(): JsonResponse
     {
-        if (! app()->environment('local')) {
-            abort(404);
-        }
+        return response()->json($this->auth->devLogin());
+    }
 
-        $user = User::query()->firstOrCreate(
-            ['email' => 'dev@english-zero2hero.local'],
-            [
-                'name' => 'Dev Learner',
-                'password' => Hash::make(Str::random(32)),
-                'email_verified_at' => now(),
-            ]
-        );
-
-        $token = $user->createToken('dev')->plainTextToken;
+    public function googleStatus(): JsonResponse
+    {
+        $this->settings->applyToConfig();
 
         return response()->json([
-            'token' => $token,
-            'user' => $user,
+            'data' => [
+                'enabled' => $this->settings->isGoogleOAuthEnabled(),
+            ],
         ]);
     }
 
     public function googleRedirect(): JsonResponse
     {
+        $this->settings->applyToConfig();
+        if (! $this->settings->isGoogleOAuthEnabled()) {
+            return response()->json(['message' => 'Google sign-in is disabled.'], 403);
+        }
+
         $url = Socialite::driver('google')
             ->stateless()
             ->redirect()
@@ -57,28 +74,28 @@ class AuthController extends Controller
     /**
      * @OA\Get(path="/api/v1/auth/google/callback", tags={"Auth"}, summary="Google OAuth callback")
      */
-    public function googleCallback(Request $request): JsonResponse
+    public function googleCallback(Request $request): RedirectResponse|JsonResponse
     {
-        $googleUser = Socialite::driver('google')->stateless()->user();
+        $this->settings->applyToConfig();
+        if (! $this->settings->isGoogleOAuthEnabled()) {
+            return redirect()->away($this->auth->frontendLoginUrl('failed'));
+        }
 
-        $user = User::query()->updateOrCreate(
-            ['email' => $googleUser->getEmail()],
-            [
-                'name' => $googleUser->getName() ?? $googleUser->getNickname() ?? 'Learner',
-                'google_id' => $googleUser->getId(),
-                'avatar' => $googleUser->getAvatar(),
-                'password' => Hash::make(Str::random(32)),
-                'email_verified_at' => now(),
-            ]
-        );
+        try {
+            $googleUser = Socialite::driver('google')->stateless()->user();
+            $token = $this->auth->issueTokenForGoogleUser($googleUser);
+        } catch (\Throwable) {
+            return redirect()->away($this->auth->frontendLoginUrl('failed'));
+        }
 
-        $token = $user->createToken('api')->plainTextToken;
+        if ($request->expectsJson()) {
+            return response()->json([
+                'token' => $token,
+                'redirect' => $this->auth->frontendAuthCallbackUrl($token),
+            ]);
+        }
 
-        return response()->json([
-            'token' => $token,
-            'user' => $user,
-            'frontend_redirect' => config('e2h.frontend_url').'/auth/callback?token='.$token,
-        ]);
+        return redirect()->away($this->auth->frontendAuthCallbackUrl($token));
     }
 
     /**
@@ -86,7 +103,9 @@ class AuthController extends Controller
      */
     public function me(Request $request): JsonResponse
     {
-        return response()->json(['data' => $request->user()]);
+        return response()->json([
+            'data' => $request->user()->load('roles:id,slug,name,permissions'),
+        ]);
     }
 
     /**

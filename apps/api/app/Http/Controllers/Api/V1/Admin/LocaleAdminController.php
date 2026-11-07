@@ -3,50 +3,34 @@
 namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Locale;
+use App\Http\Requests\Api\V1\Admin\Locale\IndexLocalesAdminRequest;
+use App\Http\Requests\Api\V1\Admin\Locale\StoreLocaleRequest;
+use App\Http\Requests\Api\V1\Admin\Locale\UpdateLocaleRequest;
+use App\Services\LocaleAdminService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class LocaleAdminController extends Controller
 {
-    public function store(Request $request): JsonResponse
+    public function __construct(
+        private readonly LocaleAdminService $locales,
+    ) {}
+
+    public function index(IndexLocalesAdminRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'code' => 'required|string|max:16|alpha_dash|unique:locales,code',
-            'name' => 'required|string|max:64',
-            'native_name' => 'required|string|max:64',
-            'is_active' => 'boolean',
-            'sort_order' => 'integer',
-        ]);
-
-        if ($request->boolean('is_default')) {
-            Locale::query()->update(['is_default' => false]);
-            $validated['is_default'] = true;
-        }
-
-        $locale = Locale::query()->create($validated);
-
-        return response()->json(['data' => $locale], 201);
+        return response()->json($this->locales->index());
     }
 
-    public function update(Request $request, string $code): JsonResponse
+    public function store(StoreLocaleRequest $request): JsonResponse
     {
-        $locale = Locale::query()->findOrFail($code);
+        return response()->json([
+            'data' => $this->locales->store($request->validated(), $request->wantsDefault()),
+        ], 201);
+    }
 
-        $validated = $request->validate([
-            'name' => 'sometimes|string|max:64',
-            'native_name' => 'sometimes|string|max:64',
-            'is_active' => 'boolean',
-            'sort_order' => 'integer',
-            'is_default' => 'boolean',
+    public function update(UpdateLocaleRequest $request, string $code): JsonResponse
+    {
+        return response()->json([
+            'data' => $this->locales->update($code, $request->validated(), $request->wantsDefault()),
         ]);
-
-        if ($request->boolean('is_default')) {
-            Locale::query()->where('code', '!=', $code)->update(['is_default' => false]);
-        }
-
-        $locale->update($validated);
-
-        return response()->json(['data' => $locale]);
     }
 }

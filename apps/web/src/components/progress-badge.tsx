@@ -1,27 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { readProgress } from "@/lib/progress";
+import { Badge } from "@/components/ui/badge";
+import { useGrammarProgress } from "@/hooks/use-grammar-progress";
 
-export function ProgressSummary() {
-  const t = useTranslations("home");
-  const [counts, setCounts] = useState({ tenses: 0, groups: 0 });
-
-  useEffect(() => {
-    const p = readProgress();
-    setCounts({
-      tenses: p.completedTenses.length,
-      groups: p.completedGroups.length,
-    });
-  }, []);
+export function ProgressBadge() {
+  const t = useTranslations("gamification");
+  const p = useGrammarProgress();
 
   return (
-    <p className="text-sm text-slate-600">
-      {t("progress", {
-        tenses: counts.tenses,
-        groups: counts.groups,
-      })}
-    </p>
+    <Badge variant="outline" className="font-normal">
+      {t("xp", { xp: p.completedTenses.length + p.completedGroups.length * 5 })}
+    </Badge>
   );
 }

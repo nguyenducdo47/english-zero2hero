@@ -1,0 +1,23 @@
+.admin-root {
+  --admin-primary: #2563eb;
+  --admin-primary-hover: #1d4ed8;
+  --admin-sidebar-bg: #ffffff;
+  --admin-sidebar-active: #eff6ff;
+  --admin-sidebar-text: #334155;
+  --admin-bg: #f8fafc;
+  --admin-surface: #ffffff;
+  --admin-text: #0f172a;
+  --admin-text-muted: #64748b;
+  --admin-border: #e2e8f0;
+}
+
+.dark .admin-root {
+  --admin-sidebar-bg: #0f172a;
+  --admin-sidebar-active: #1e293b;
+  --admin-sidebar-text: #cbd5e1;
+  --admin-bg: #020617;
+  --admin-surface: #0f172a;
+  --admin-text: #f1f5f9;
+  --admin-text-muted: #94a3b8;
+  --admin-border: #334155;
+}

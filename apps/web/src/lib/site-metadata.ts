@@ -7,5 +7,5 @@ export const staticSiteMetadata: Metadata = {
     template: "%s | English Zero2Hero",
   },
   description:
-    "12 English tenses for beginners, TOEIC/IELTS prep — Ôn 12 thì, luyện thi và chấm bài.",
+    "Ôn 12 thì tiếng Anh cho người mất gốc, luyện TOEIC/IELTS, chấm bài và AI review.",
 };

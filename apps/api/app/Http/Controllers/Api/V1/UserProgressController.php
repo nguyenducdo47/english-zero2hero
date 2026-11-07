@@ -3,42 +3,41 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Models\UserProgress;
+use App\Http\Requests\Api\V1\UserProgress\ShowUserProgressRequest;
+use App\Http\Requests\Api\V1\UserProgress\UpsertUserProgressRequest;
+use App\Services\UserProgressService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * @OA\Tag(name="Progress", description="User learning progress")
  */
 class UserProgressController extends Controller
 {
+    public function __construct(
+        private readonly UserProgressService $progress,
+    ) {}
+
     /**
      * @OA\Put(path="/api/v1/user/progress/{key}", tags={"Progress"}, security={{"sanctum":{}}})
      */
-    public function upsert(Request $request, string $key): JsonResponse
+    public function upsert(UpsertUserProgressRequest $request, string $key): JsonResponse
     {
-        $validated = $request->validate([
-            'payload' => 'required|array',
+        return response()->json([
+            'data' => $this->progress->upsert(
+                $request->user()->id,
+                $key,
+                $request->validated('payload'),
+            ),
         ]);
-
-        $progress = UserProgress::query()->updateOrCreate(
-            ['user_id' => $request->user()->id, 'progress_key' => $key],
-            ['payload' => $validated['payload']]
-        );
-
-        return response()->json(['data' => $progress]);
     }
 
     /**
      * @OA\Get(path="/api/v1/user/progress/{key}", tags={"Progress"}, security={{"sanctum":{}}})
      */
-    public function show(Request $request, string $key): JsonResponse
+    public function show(ShowUserProgressRequest $request, string $key): JsonResponse
     {
-        $progress = UserProgress::query()
-            ->where('user_id', $request->user()->id)
-            ->where('progress_key', $key)
-            ->first();
-
-        return response()->json(['data' => $progress]);
+        return response()->json([
+            'data' => $this->progress->show($request->user()->id, $key),
+        ]);
     }
 }

@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Http\Requests\Api\V1\Admin\TenseGroup;
+
+use App\Http\Requests\Api\V1\Concerns\AdminAuthorized;
+use App\Http\Requests\Api\V1\Concerns\HasTranslationInputRules;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
+class StoreTenseGroupRequest extends FormRequest
+{
+    use AdminAuthorized;
+    use HasTranslationInputRules;
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function rules(): array
+    {
+        return [
+            'slug' => [
+                'required',
+                'string',
+                'max:64',
+                'regex:/^[a-z0-9-]+$/',
+                Rule::unique('tense_groups', 'slug'),
+            ],
+            'sort_order' => ['sometimes', 'integer', 'min:0', 'max:9999'],
+            ...$this->translationInputRules(),
+        ];
+    }
+}
