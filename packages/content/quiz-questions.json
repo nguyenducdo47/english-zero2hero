@@ -1,0 +1,139 @@
+{
+  "questions": [
+    {
+      "tense_group_slug": "present",
+      "type": "multiple_choice",
+      "prompt_en": "She ___ to school every day.",
+      "prompt_vi": "Cô ấy ___ đến trường mỗi ngày.",
+      "options": ["go", "goes", "going", "went"],
+      "correct_index": 1,
+      "explanation_vi": "Thói quen + chủ ngữ số ít → goes (present simple)."
+    },
+    {
+      "tense_group_slug": "present",
+      "type": "multiple_choice",
+      "prompt_en": "Listen! The baby ___ .",
+      "prompt_vi": "Nghe kìa! Em bé đang ___ .",
+      "options": ["cries", "is crying", "cried", "has cried"],
+      "correct_index": 1,
+      "explanation_vi": "Listen! → hành động đang xảy ra → present continuous."
+    },
+    {
+      "tense_group_slug": "present",
+      "type": "fill_blank",
+      "prompt_en": "I have ___ (live) here since 2020.",
+      "prompt_vi": "Tôi đã sống ở đây từ năm 2020.",
+      "correct_answers": ["lived"],
+      "synonyms": [],
+      "explanation_vi": "Present perfect: have + V3."
+    },
+    {
+      "tense_group_slug": "present",
+      "type": "multiple_choice",
+      "prompt_en": "Water ___ at 100 degrees Celsius.",
+      "prompt_vi": "Nước ___ ở 100 độ C.",
+      "options": ["is boiling", "boils", "boiled", "has boiled"],
+      "correct_index": 1,
+      "explanation_vi": "Sự thật khoa học → present simple."
+    },
+    {
+      "tense_group_slug": "present",
+      "type": "multiple_choice",
+      "prompt_en": "They ___ TV at the moment.",
+      "prompt_vi": "Họ đang ___ TV lúc này.",
+      "options": ["watch", "watches", "are watching", "have watched"],
+      "correct_index": 2,
+      "explanation_vi": "at the moment → present continuous."
+    },
+    {
+      "tense_group_slug": "past",
+      "type": "multiple_choice",
+      "prompt_en": "We ___ to Hue last month.",
+      "prompt_vi": "Chúng tôi đã ___ Huế tháng trước.",
+      "options": ["go", "went", "have gone", "were going"],
+      "correct_index": 1,
+      "explanation_vi": "last month → past simple."
+    },
+    {
+      "tense_group_slug": "past",
+      "type": "multiple_choice",
+      "prompt_en": "While I ___, my phone rang.",
+      "prompt_vi": "Trong lúc tôi ___, điện thoại reo.",
+      "options": ["cooked", "was cooking", "have cooked", "am cooking"],
+      "correct_index": 1,
+      "explanation_vi": "while + hành động nền → past continuous."
+    },
+    {
+      "tense_group_slug": "past",
+      "type": "fill_blank",
+      "prompt_en": "She had already ___ (leave) when I came.",
+      "prompt_vi": "Cô ấy đã rời đi trước khi tôi đến.",
+      "correct_answers": ["left"],
+      "synonyms": [],
+      "explanation_vi": "Hành động trước trong quá khứ → past perfect."
+    },
+    {
+      "tense_group_slug": "past",
+      "type": "multiple_choice",
+      "prompt_en": "Did you ___ the email yesterday?",
+      "prompt_vi": "Hôm qua bạn có ___ email không?",
+      "options": ["sent", "send", "sending", "sends"],
+      "correct_index": 1,
+      "explanation_vi": "Did + V nguyên thể."
+    },
+    {
+      "tense_group_slug": "future",
+      "type": "multiple_choice",
+      "prompt_en": "Don't worry, I ___ you.",
+      "prompt_vi": "Đừng lo, tôi sẽ ___ bạn.",
+      "options": ["help", "will help", "am helping", "helped"],
+      "correct_index": 1,
+      "explanation_vi": "Quyết định/hứa tức thì → will."
+    },
+    {
+      "tense_group_slug": "future",
+      "type": "multiple_choice",
+      "prompt_en": "Look at those clouds! It ___ rain.",
+      "prompt_vi": "Nhìn mây kìa! Trời ___ mưa.",
+      "options": ["will", "is going to", "rains", "rained"],
+      "correct_index": 1,
+      "explanation_vi": "Dự đoán có căn cứ → going to."
+    },
+    {
+      "tense_group_slug": "future",
+      "type": "fill_blank",
+      "prompt_en": "By 2030, they will have ___ (complete) the project.",
+      "prompt_vi": "Đến năm 2030 họ sẽ hoàn thành dự án.",
+      "correct_answers": ["completed"],
+      "synonyms": [],
+      "explanation_vi": "Future perfect: will have + V3."
+    },
+    {
+      "tense_group_slug": "perfect-continuous",
+      "type": "multiple_choice",
+      "prompt_en": "I ___ English for two years.",
+      "prompt_vi": "Tôi đã học tiếng Anh được hai năm (vẫn tiếp tục).",
+      "options": ["study", "have studied", "have been studying", "studied"],
+      "correct_index": 2,
+      "explanation_vi": "Nhấn duration đang tiếp diễn → present perfect continuous."
+    },
+    {
+      "tense_group_slug": "perfect-continuous",
+      "type": "multiple_choice",
+      "prompt_en": "He was tired because he ___ all day.",
+      "prompt_vi": "Anh ấy mệt vì đã ___ cả ngày.",
+      "options": ["works", "had worked", "had been working", "has worked"],
+      "correct_index": 2,
+      "explanation_vi": "Quá trình trước trạng thái quá khứ → past perfect continuous."
+    },
+    {
+      "tense_group_slug": "perfect-continuous",
+      "type": "fill_blank",
+      "prompt_en": "By next month, she will have been ___ (work) here for five years.",
+      "prompt_vi": "Đến tháng sau cô ấy sẽ làm việc ở đây được năm năm.",
+      "correct_answers": ["working"],
+      "synonyms": [],
+      "explanation_vi": "Future perfect continuous: will have been + V-ing."
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+node_modules/
+.env
+.env.local
+vendor/
+apps/api/storage/logs/
+apps/api/storage/framework/cache/
+apps/api/storage/framework/sessions/
+apps/api/storage/framework/views/
+apps/api/bootstrap/cache/*.php
+apps/api/database/database.sqlite
+.DS_Store
+Thumbs.db
+.next/
+apps/api/public/storage

@@ -1,0 +1,97 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "English Zero2Hero API",
+    "description": "REST API v1 — grammar, quizzes, TOEIC/IELTS, AI grading, crawl pipeline.",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "http://localhost:8000" }],
+  "components": {
+    "securitySchemes": {
+      "sanctum": { "type": "http", "scheme": "bearer", "bearerFormat": "Sanctum" }
+    }
+  },
+  "paths": {
+    "/api/v1/grammar/tense-groups": {
+      "get": {
+        "tags": ["Grammar"],
+        "summary": "List tense groups with tenses"
+      }
+    },
+    "/api/v1/grammar/tenses": {
+      "get": { "tags": ["Grammar"], "summary": "List all tenses" }
+    },
+    "/api/v1/grammar/tenses/{slug}": {
+      "get": {
+        "tags": ["Grammar"],
+        "summary": "Tense detail",
+        "parameters": [{ "name": "slug", "in": "path", "required": true, "schema": { "type": "string" } }]
+      }
+    },
+    "/api/v1/grammar/tense-groups/{slug}/quiz": {
+      "get": {
+        "tags": ["Grammar"],
+        "summary": "Random quiz questions",
+        "parameters": [
+          { "name": "slug", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } }
+        ]
+      }
+    },
+    "/api/v1/quizzes/tense-groups/{slug}/attempts": {
+      "post": { "tags": ["Quizzes"], "summary": "Submit grammar group quiz" }
+    },
+    "/api/v1/auth/google/redirect": {
+      "get": { "tags": ["Auth"], "summary": "Get Google OAuth URL" }
+    },
+    "/api/v1/auth/google/callback": {
+      "get": { "tags": ["Auth"], "summary": "Google OAuth callback" }
+    },
+    "/api/v1/auth/me": {
+      "get": { "tags": ["Auth"], "security": [{ "sanctum": [] }], "summary": "Current user" }
+    },
+    "/api/v1/auth/logout": {
+      "post": { "tags": ["Auth"], "security": [{ "sanctum": [] }], "summary": "Logout" }
+    },
+    "/api/v1/exams": {
+      "get": {
+        "tags": ["Exams"],
+        "security": [{ "sanctum": [] }],
+        "summary": "List published exams"
+      }
+    },
+    "/api/v1/exams/{slug}": {
+      "get": {
+        "tags": ["Exams"],
+        "security": [{ "sanctum": [] }],
+        "summary": "Exam with questions (no answers)"
+      }
+    },
+    "/api/v1/exams/{slug}/attempts": {
+      "post": {
+        "tags": ["Attempts"],
+        "security": [{ "sanctum": [] }],
+        "summary": "Submit exam (objective + optional writing/speaking AI)"
+      }
+    },
+    "/api/v1/attempts/{id}": {
+      "get": {
+        "tags": ["Attempts"],
+        "security": [{ "sanctum": [] }],
+        "summary": "Attempt detail with grading"
+      }
+    },
+    "/api/v1/mock-registrations": {
+      "get": { "tags": ["MockExams"], "security": [{ "sanctum": [] }], "summary": "List registrations" },
+      "post": { "tags": ["MockExams"], "security": [{ "sanctum": [] }], "summary": "Register mock exam" }
+    },
+    "/api/v1/content-sources": {
+      "get": { "tags": ["Content"], "security": [{ "sanctum": [] }], "summary": "List crawl sources" },
+      "post": { "tags": ["Content"], "security": [{ "sanctum": [] }], "summary": "Queue crawl job" }
+    },
+    "/api/v1/user/progress/{key}": {
+      "get": { "tags": ["Progress"], "security": [{ "sanctum": [] }], "summary": "Get progress" },
+      "put": { "tags": ["Progress"], "security": [{ "sanctum": [] }], "summary": "Upsert progress" }
+    }
+  }
+}
