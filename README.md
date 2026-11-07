@@ -36,6 +36,8 @@ Website ôn tiếng Anh từ cơ bản đến nâng cao: **12 thì** (không đ�
 
 Chi tiết: [`docs/LARAGON.md`](docs/LARAGON.md)
 
+**Đa ngôn ngữ (vi/en):** [`docs/I18N.md`](docs/I18N.md) — web `next-intl`, API `X-Locale` / `Accept-Language`.
+
 ## GitHub
 
 Repo khuyến nghị: **`english-zero2hero`**

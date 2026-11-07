@@ -1,0 +1,95 @@
+{
+  "meta": {
+    "defaultTitle": "English Zero2Hero",
+    "defaultDescription": "12 English tenses for beginners, TOEIC/IELTS prep, instant grading and AI writing/speaking feedback."
+  },
+  "theme": {
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode"
+  },
+  "nav": {
+    "brand": "English Zero2Hero",
+    "grammar": "12 tenses",
+    "exams": "Exam prep",
+    "mock": "Mock test",
+    "login": "Sign in"
+  },
+  "home": {
+    "title": "English Zero2Hero",
+    "subtitle": "From zero to test-ready: learn 12 tenses without signing in, prep TOEIC/IELTS with Google sign-in, per-item scoring and AI feedback for writing & speaking.",
+    "ctaGrammar": "Start 12 tenses",
+    "ctaLogin": "Sign in for exams",
+    "phase1Title": "Phase 1 — Grammar",
+    "phase1Text": "Four tense groups, bilingual examples, random quizzes after each group.",
+    "phase2Title": "Phase 2+ — TOEIC / IELTS",
+    "phase2Text": "Exam sets, 2 or 4 skills, mock registration, API v1 for mobile.",
+    "progress": "Local progress: {tenses}/12 tenses · {groups}/4 group quizzes"
+  },
+  "grammar": {
+    "title": "12 English tenses",
+    "intro": "Study by group, take a random quiz at the end of each group.",
+    "groupQuiz": "Group quiz →",
+    "structure": "Structure",
+    "usage": "Usage",
+    "signals": "Time signals",
+    "pitfalls": "Common mistakes",
+    "examples": "Examples",
+    "listen": "Listen",
+    "quizGroup": "Practice group {group} →",
+    "quizTitle": "Quiz — {group}",
+    "quizIntro": "Random questions; see right/wrong answers and explanations after submit.",
+    "quizLoading": "Loading questions...",
+    "quizLoadingGroup": "Loading group quiz...",
+    "quizApiError": "Could not load questions. Run `php artisan serve` in apps/api.",
+    "quizNeedApi": "Laravel API must be running to submit answers."
+  },
+  "quiz": {
+    "submit": "Submit",
+    "submitting": "Grading...",
+    "result": "Result — {group}: {score}/{max}",
+    "correct": "Correct",
+    "wrong": "Wrong",
+    "question": "Question {n}",
+    "correctAnswer": "Correct answer:",
+    "fillPlaceholder": "Enter the correct verb form...",
+    "submitError": "Submit failed"
+  },
+  "login": {
+    "title": "Sign in",
+    "intro": "Access TOEIC/IELTS sets, mock tests, and sync progress (Google sign-in).",
+    "google": "Sign in with Google",
+    "redirecting": "Redirecting...",
+    "devHint": "Dev: open exams (needs a real API token)"
+  },
+  "auth": {
+    "processing": "Processing...",
+    "success": "Signed in successfully.",
+    "missingToken": "Missing token. Please sign in again."
+  },
+  "exams": {
+    "title": "Exam catalog",
+    "loginRequired": "Please sign in to view exams.",
+    "loginLink": "Sign in",
+    "loading": "Loading or no exams yet.",
+    "skills": "{type} · {mode} skills",
+    "loadingExam": "Loading exam...",
+    "loginToView": "to view this exam.",
+    "submit": "Submit",
+    "writingAi": "Writing (AI review)",
+    "writingPlaceholder": "Write a sample paragraph for AI rubric feedback...",
+    "needLogin": "Sign in required"
+  },
+  "mock": {
+    "title": "Register mock test",
+    "examCode": "Exam code",
+    "time": "Scheduled time",
+    "register": "Register",
+    "loginFirst": "Sign in first.",
+    "registered": "Mock test registered #{id}"
+  },
+  "locale": {
+    "label": "Language",
+    "vi": "Tiếng Việt",
+    "en": "English"
+  }
+}

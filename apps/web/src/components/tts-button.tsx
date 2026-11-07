@@ -1,8 +1,11 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 type Props = { text: string; label?: string };
 
-export function TtsButton({ text, label = "Nghe" }: Props) {
+export function TtsButton({ text, label }: Props) {
+  const t = useTranslations("grammar");
   const speak = () => {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
     window.speechSynthesis.cancel();
@@ -18,7 +21,7 @@ export function TtsButton({ text, label = "Nghe" }: Props) {
       onClick={speak}
       className="rounded-md border border-slate-300 px-2 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
     >
-      {label}
+      {label ?? t("listen")}
     </button>
   );
 }

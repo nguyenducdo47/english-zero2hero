@@ -5,12 +5,15 @@ namespace Database\Seeders;
 use App\Models\Exam;
 use App\Models\ExamSection;
 use App\Models\Question;
+use App\Services\ContentTranslationImporter;
 use Illuminate\Database\Seeder;
 
 class ExamSeeder extends Seeder
 {
     public function run(): void
     {
+        $importer = new ContentTranslationImporter;
+
         $toeic = Exam::query()->updateOrCreate(
             ['slug' => 'toeic-mini-lr-450'],
             [
@@ -35,30 +38,35 @@ class ExamSeeder extends Seeder
                 'prompt_en' => 'The meeting will begin ___ 9 a.m.',
                 'options' => ['in', 'on', 'at', 'by'],
                 'correct_index' => 2,
-                'explanation_vi' => 'Giờ cụ thể → at.',
+                'translations' => [
+                    'vi' => ['explanation' => 'Giờ cụ thể → at.'],
+                    'en' => ['explanation' => 'Specific time → at.'],
+                ],
             ],
             [
                 'prompt_en' => 'Please submit the report ___ Friday.',
                 'options' => ['until', 'by', 'for', 'from'],
                 'correct_index' => 1,
-                'explanation_vi' => 'Hạn chót → by Friday.',
+                'translations' => [
+                    'vi' => ['explanation' => 'Hạn chót → by Friday.'],
+                    'en' => ['explanation' => 'Deadline → by Friday.'],
+                ],
             ],
         ];
 
         Question::query()->where('exam_id', $toeic->id)->delete();
         foreach ($toeicQuestions as $i => $q) {
-            Question::query()->create([
+            $question = Question::query()->create([
                 'exam_id' => $toeic->id,
                 'tense_group_id' => null,
                 'type' => 'multiple_choice',
-                'prompt_en' => $q['prompt_en'],
                 'payload' => [
                     'options' => $q['options'],
                     'correct_index' => $q['correct_index'],
                 ],
-                'explanation_vi' => $q['explanation_vi'],
                 'sort_order' => $i + 1,
             ]);
+            $importer->apply($question, $importer->mapFromContent($q, ['prompt', 'explanation']));
         }
 
         $ielts = Exam::query()->updateOrCreate(
@@ -82,17 +90,29 @@ class ExamSeeder extends Seeder
         }
 
         Question::query()->where('exam_id', $ielts->id)->delete();
-        Question::query()->create([
-            'exam_id' => $ielts->id,
-            'type' => 'fill_blank',
+        $ieltsQ = [
             'prompt_en' => 'Many students find it difficult to concentrate ___ long periods.',
-            'prompt_vi' => 'Nhiều học sinh thấy khó tập trung trong thời gian dài.',
             'payload' => [
                 'correct_answers' => ['for'],
                 'synonyms' => [],
             ],
-            'explanation_vi' => 'for + khoảng thời gian.',
+            'translations' => [
+                'vi' => [
+                    'prompt' => 'Nhiều học sinh thấy khó tập trung trong thời gian dài.',
+                    'explanation' => 'for + khoảng thời gian.',
+                ],
+                'en' => [
+                    'prompt' => 'Many students find it difficult to concentrate ___ long periods.',
+                    'explanation' => 'for + a period of time.',
+                ],
+            ],
+        ];
+        $question = Question::query()->create([
+            'exam_id' => $ielts->id,
+            'type' => 'fill_blank',
+            'payload' => $ieltsQ['payload'],
             'sort_order' => 1,
         ]);
+        $importer->apply($question, $ieltsQ['translations']);
     }
 }

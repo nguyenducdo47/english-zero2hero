@@ -18,6 +18,32 @@ class AuthController extends Controller
     /**
      * @OA\Get(path="/api/v1/auth/google/redirect", tags={"Auth"}, summary="Google OAuth redirect URL")
      */
+    /**
+     * Local-only: issue a Sanctum token without Google OAuth (for UI dev login).
+     */
+    public function devLogin(): JsonResponse
+    {
+        if (! app()->environment('local')) {
+            abort(404);
+        }
+
+        $user = User::query()->firstOrCreate(
+            ['email' => 'dev@english-zero2hero.local'],
+            [
+                'name' => 'Dev Learner',
+                'password' => Hash::make(Str::random(32)),
+                'email_verified_at' => now(),
+            ]
+        );
+
+        $token = $user->createToken('dev')->plainTextToken;
+
+        return response()->json([
+            'token' => $token,
+            'user' => $user,
+        ]);
+    }
+
     public function googleRedirect(): JsonResponse
     {
         $url = Socialite::driver('google')
@@ -70,6 +96,6 @@ class AuthController extends Controller
     {
         $request->user()->currentAccessToken()?->delete();
 
-        return response()->json(['message' => 'Logged out']);
+        return response()->json(['message' => __('api.logged_out')]);
     }
 }

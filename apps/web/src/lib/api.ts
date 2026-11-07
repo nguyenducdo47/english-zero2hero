@@ -1,8 +1,22 @@
+import type { Locale } from "@/i18n/routing";
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
-export async function apiGet<T>(path: string, token?: string): Promise<T> {
+export function buildApiHeaders(locale: Locale, token?: string): HeadersInit {
+  return {
+    "Accept-Language": locale,
+    "X-Locale": locale,
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
+
+export async function apiGet<T>(
+  path: string,
+  locale: Locale,
+  token?: string,
+): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
-    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    headers: buildApiHeaders(locale, token),
     cache: "no-store",
   });
   if (!res.ok) {
@@ -14,13 +28,14 @@ export async function apiGet<T>(path: string, token?: string): Promise<T> {
 export async function apiPost<T>(
   path: string,
   body: unknown,
+  locale: Locale,
   token?: string,
 ): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...buildApiHeaders(locale, token),
     },
     body: JSON.stringify(body),
   });

@@ -1,0 +1,95 @@
+{
+  "meta": {
+    "defaultTitle": "English Zero2Hero",
+    "defaultDescription": "Ôn 12 thì tiếng Anh cho người mất gốc, luyện TOEIC/IELTS, chấm bài và AI review."
+  },
+  "theme": {
+    "switchToLight": "Bật sáng",
+    "switchToDark": "Bật tối"
+  },
+  "nav": {
+    "brand": "English Zero2Hero",
+    "grammar": "12 thì",
+    "exams": "Ôn thi",
+    "mock": "Thi thử",
+    "login": "Đăng nhập"
+  },
+  "home": {
+    "title": "English Zero2Hero",
+    "subtitle": "Từ mất gốc đến luyện thi: học 12 thì không cần đăng nhập, ôn TOEIC/IELTS có Google login, chấm đúng/sai từng câu và gợi ý AI cho Writing/Speaking.",
+    "ctaGrammar": "Bắt đầu 12 thì",
+    "ctaLogin": "Đăng nhập ôn thi",
+    "phase1Title": "Giai đoạn 1 — Grammar",
+    "phase1Text": "4 nhóm thì, ví dụ song ngữ, quiz random sau mỗi nhóm.",
+    "phase2Title": "Giai đoạn 2+ — TOEIC / IELTS",
+    "phase2Text": "Bộ đề, 2 hoặc 4 kỹ năng, đăng ký thi thử, API v1 cho app.",
+    "progress": "Tiến độ local: {tenses}/12 thì · {groups}/4 nhóm quiz"
+  },
+  "grammar": {
+    "title": "12 thì tiếng Anh",
+    "intro": "Học theo nhóm, làm quiz ôn ngẫu nhiên cuối mỗi nhóm.",
+    "groupQuiz": "Làm bài ôn nhóm →",
+    "structure": "Cấu trúc",
+    "usage": "Cách dùng",
+    "signals": "Dấu hiệu nhận biết",
+    "pitfalls": "Lưu ý",
+    "examples": "Ví dụ",
+    "listen": "Nghe",
+    "quizGroup": "Ôn quiz nhóm {group} →",
+    "quizTitle": "Quiz — {group}",
+    "quizIntro": "Câu hỏi ngẫu nhiên; kết quả đúng/sai và đáp án sau khi nộp.",
+    "quizLoading": "Đang tải câu hỏi...",
+    "quizLoadingGroup": "Đang tải bài ôn nhóm...",
+    "quizApiError": "Không tải được câu hỏi. Chạy `php artisan serve` trong apps/api.",
+    "quizNeedApi": "Cần API Laravel đang chạy để nộp bài."
+  },
+  "quiz": {
+    "submit": "Nộp bài",
+    "submitting": "Đang chấm...",
+    "result": "Kết quả — {group}: {score}/{max}",
+    "correct": "Đúng",
+    "wrong": "Sai",
+    "question": "Câu {n}",
+    "correctAnswer": "Đáp án đúng:",
+    "fillPlaceholder": "Điền dạng đúng của động từ...",
+    "submitError": "Lỗi gửi bài"
+  },
+  "login": {
+    "title": "Đăng nhập",
+    "intro": "Ôn TOEIC/IELTS, đăng ký thi thử và đồng bộ tiến độ (sau khi đăng nhập Google).",
+    "google": "Đăng nhập bằng Google",
+    "redirecting": "Đang chuyển...",
+    "devHint": "Dev: vào trang đề (cần token thật từ API)"
+  },
+  "auth": {
+    "processing": "Đang xử lý...",
+    "success": "Đăng nhập thành công.",
+    "missingToken": "Thiếu token. Đăng nhập lại."
+  },
+  "exams": {
+    "title": "Bộ đề ôn thi",
+    "loginRequired": "Vui lòng đăng nhập để xem đề.",
+    "loginLink": "Đăng nhập",
+    "loading": "Đang tải hoặc chưa có đề.",
+    "skills": "{type} · {mode} skills",
+    "loadingExam": "Đang tải đề...",
+    "loginToView": "để xem đề.",
+    "submit": "Nộp bài",
+    "writingAi": "Writing (AI review)",
+    "writingPlaceholder": "Viết đoạn mẫu để nhận rubric AI...",
+    "needLogin": "Cần đăng nhập"
+  },
+  "mock": {
+    "title": "Đăng ký thi thử",
+    "examCode": "Mã đề",
+    "time": "Thời gian",
+    "register": "Đăng ký",
+    "loginFirst": "Đăng nhập trước.",
+    "registered": "Đã đăng ký thi thử #{id}"
+  },
+  "locale": {
+    "label": "Ngôn ngữ",
+    "vi": "Tiếng Việt",
+    "en": "English"
+  }
+}

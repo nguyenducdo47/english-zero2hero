@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Question;
 use App\Models\Tense;
 use App\Models\TenseGroup;
+use App\Services\ContentTranslationImporter;
 use Illuminate\Database\Seeder;
 
 class GrammarContentSeeder extends Seeder
@@ -17,35 +18,30 @@ class GrammarContentSeeder extends Seeder
 
         $grammar = json_decode(file_get_contents($grammarPath), true);
         $quiz = json_decode(file_get_contents($quizPath), true);
+        $importer = new ContentTranslationImporter;
 
         $groupIds = [];
         foreach ($grammar['groups'] as $group) {
             $model = TenseGroup::query()->updateOrCreate(
                 ['slug' => $group['slug']],
-                [
-                    'name_vi' => $group['name_vi'],
-                    'name_en' => $group['name_en'],
-                    'sort_order' => $group['sort_order'],
-                ]
+                ['sort_order' => $group['sort_order']]
             );
+            $importer->apply($model, $importer->mapFromContent($group, ['name']));
             $groupIds[$group['slug']] = $model->id;
         }
 
         foreach ($grammar['tenses'] as $tense) {
-            Tense::query()->updateOrCreate(
+            $model = Tense::query()->updateOrCreate(
                 ['slug' => $tense['slug']],
                 [
                     'tense_group_id' => $groupIds[$tense['group_slug']],
-                    'name_en' => $tense['name_en'],
-                    'name_vi' => $tense['name_vi'],
                     'sort_order' => $tense['sort_order'],
                     'structure' => $tense['structure'],
-                    'usage_vi' => $tense['usage_vi'],
                     'signals' => $tense['signals'],
-                    'pitfalls_vi' => $tense['pitfalls_vi'] ?? null,
                     'examples' => $tense['examples'],
                 ]
             );
+            $importer->apply($model, $importer->mapFromContent($tense, ['name', 'usage', 'pitfalls']));
         }
 
         Question::query()->whereNotNull('tense_group_id')->whereNull('exam_id')->delete();
@@ -61,16 +57,15 @@ class GrammarContentSeeder extends Seeder
                     'synonyms' => $item['synonyms'] ?? [],
                 ];
 
-            Question::query()->create([
+            $question = Question::query()->create([
                 'tense_group_id' => $groupIds[$item['tense_group_slug']],
                 'exam_id' => null,
                 'type' => $item['type'],
-                'prompt_en' => $item['prompt_en'],
-                'prompt_vi' => $item['prompt_vi'] ?? null,
                 'payload' => $payload,
-                'explanation_vi' => $item['explanation_vi'] ?? null,
                 'sort_order' => $index + 1,
             ]);
+
+            $importer->apply($question, $importer->mapFromContent($item, ['prompt', 'explanation']));
         }
     }
 }

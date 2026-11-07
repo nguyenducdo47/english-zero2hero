@@ -7,6 +7,7 @@ export type Tense = {
   slug: string;
   name_en: string;
   name_vi: string;
+  translations?: Record<string, Record<string, unknown>>;
   group_slug: string;
   sort_order: number;
   structure: string;
@@ -20,6 +21,7 @@ export type TenseGroup = {
   slug: string;
   name_vi: string;
   name_en: string;
+  translations?: Record<string, Record<string, unknown>>;
   sort_order: number;
 };
 

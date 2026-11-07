@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Api\V1\Admin\LocaleAdminController;
+use App\Http\Controllers\Api\V1\Admin\TranslationController;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\LocaleController;
 use App\Http\Controllers\Api\V1\ContentSourceController;
 use App\Http\Controllers\Api\V1\ExamAttemptController;
 use App\Http\Controllers\Api\V1\ExamController;
@@ -11,6 +14,8 @@ use App\Http\Controllers\Api\V1\UserProgressController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function (): void {
+    Route::get('locales', [LocaleController::class, 'index']);
+
     Route::prefix('grammar')->group(function (): void {
         Route::get('tense-groups', [GrammarController::class, 'groups']);
         Route::get('tenses', [GrammarController::class, 'tenses']);
@@ -21,6 +26,7 @@ Route::prefix('v1')->group(function (): void {
     Route::post('quizzes/tense-groups/{slug}/attempts', [QuizAttemptController::class, 'store']);
 
     Route::prefix('auth')->group(function (): void {
+        Route::get('dev-login', [AuthController::class, 'devLogin']);
         Route::get('google/redirect', [AuthController::class, 'googleRedirect']);
         Route::get('google/callback', [AuthController::class, 'googleCallback']);
         Route::middleware('auth:sanctum')->group(function (): void {
@@ -43,5 +49,12 @@ Route::prefix('v1')->group(function (): void {
 
         Route::get('user/progress/{key}', [UserProgressController::class, 'show']);
         Route::put('user/progress/{key}', [UserProgressController::class, 'upsert']);
+
+        Route::prefix('admin')->group(function (): void {
+            Route::post('locales', [LocaleAdminController::class, 'store']);
+            Route::patch('locales/{code}', [LocaleAdminController::class, 'update']);
+            Route::get('translations', [TranslationController::class, 'show']);
+            Route::put('translations', [TranslationController::class, 'upsert']);
+        });
     });
 });

@@ -62,7 +62,7 @@ class QuizAttemptController extends Controller
                 'question_id' => $question->id,
                 'is_correct' => $graded['is_correct'],
                 'correct_answer' => $graded['correct_answer'],
-                'explanation_vi' => $graded['explanation_vi'],
+                'explanation' => $graded['explanation'],
             ];
         }
 

@@ -9,6 +9,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            LocaleSeeder::class,
             GrammarContentSeeder::class,
             ExamSeeder::class,
         ]);

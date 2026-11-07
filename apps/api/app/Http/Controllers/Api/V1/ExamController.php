@@ -39,15 +39,14 @@ class ExamController extends Controller
         $exam = Exam::query()
             ->where('slug', $slug)
             ->where('is_published', true)
-            ->with(['sections', 'questions' => fn ($q) => $q->orderBy('sort_order')])
+            ->with(['sections', 'questions' => fn ($q) => $q->with('localeEntries')->orderBy('sort_order')])
             ->firstOrFail();
 
         $exam->setRelation('questions', $exam->questions->map(function ($q) {
             return [
                 'id' => $q->id,
                 'type' => $q->type,
-                'prompt_en' => $q->prompt_en,
-                'prompt_vi' => $q->prompt_vi,
+                'prompt' => $q->localized('prompt'),
                 'options' => $q->type === 'multiple_choice' ? ($q->payload['options'] ?? []) : null,
             ];
         }));

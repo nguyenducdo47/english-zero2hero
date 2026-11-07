@@ -10,6 +10,7 @@ class QuizGrader
     {
         $payload = $question->payload;
         $type = $question->type;
+        $explanation = $question->localized('explanation');
 
         if ($type === 'multiple_choice') {
             $selected = is_array($userAnswer) ? ($userAnswer['index'] ?? null) : $userAnswer;
@@ -23,7 +24,7 @@ class QuizGrader
             return [
                 'is_correct' => $isCorrect,
                 'correct_answer' => $correct,
-                'explanation_vi' => $question->explanation_vi,
+                'explanation' => $explanation,
             ];
         }
 
@@ -37,14 +38,14 @@ class QuizGrader
             return [
                 'is_correct' => $isCorrect,
                 'correct_answer' => ['text' => $payload['correct_answers'][0] ?? null],
-                'explanation_vi' => $question->explanation_vi,
+                'explanation' => $explanation,
             ];
         }
 
         return [
             'is_correct' => false,
             'correct_answer' => null,
-            'explanation_vi' => $question->explanation_vi,
+            'explanation' => $explanation,
         ];
     }
 

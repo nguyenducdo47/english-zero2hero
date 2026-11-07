@@ -19,9 +19,15 @@
 
 ## 2. Schema nội dung mỗi thì (JSON)
 
+**Khuyến nghị:** dùng `translations` (mọi locale trong một object). Legacy `name_vi` / `name_en` vẫn được seeder hỗ trợ.
+
 ```json
 {
   "slug": "present-simple",
+  "translations": {
+    "vi": { "name": "Hiện tại đơn", "usage": ["..."], "pitfalls": "..." },
+    "en": { "name": "Present Simple", "usage": ["..."], "pitfalls": "..." }
+  },
   "name_en": "Present Simple",
   "name_vi": "Hiện tại đơn",
   "group_slug": "present",

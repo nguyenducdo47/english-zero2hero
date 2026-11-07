@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { readProgress } from "@/lib/progress";
 
 export function ProgressSummary() {
+  const t = useTranslations("home");
   const [counts, setCounts] = useState({ tenses: 0, groups: 0 });
 
   useEffect(() => {
@@ -16,7 +18,10 @@ export function ProgressSummary() {
 
   return (
     <p className="text-sm text-slate-600">
-      Tiến độ local: {counts.tenses}/12 thì · {counts.groups}/4 nhóm quiz
+      {t("progress", {
+        tenses: counts.tenses,
+        groups: counts.groups,
+      })}
     </p>
   );
 }
