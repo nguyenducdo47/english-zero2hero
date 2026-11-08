@@ -1,0 +1,3 @@
+export const GRAMMAR_GROUP_QUIZ_LIMIT = Number(
+  process.env.NEXT_PUBLIC_GRAMMAR_GROUP_QUIZ_LIMIT ?? 15,
+);

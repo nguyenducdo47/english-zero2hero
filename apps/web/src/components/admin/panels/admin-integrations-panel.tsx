@@ -29,7 +29,7 @@ type SettingField = {
   configured?: boolean;
 };
 
-type SettingsGroup = "mail" | "google";
+type SettingsGroup = "mail" | "google" | "grammar_tool";
 
 const MAIL_KEYS = [
   "mailer",
@@ -42,6 +42,23 @@ const MAIL_KEYS = [
 ] as const;
 
 const GOOGLE_KEYS = ["oauth_enabled", "client_id", "client_secret", "redirect"] as const;
+
+const GRAMMAR_TOOL_KEYS = [
+  "enabled",
+  "guest_daily_limit",
+  "user_daily_limit",
+  "libretranslate_enabled",
+  "libretranslate_url",
+  "libretranslate_api_key",
+] as const;
+
+const GRAMMAR_TOOL_BOOL_KEYS = new Set(["enabled", "libretranslate_enabled"]);
+const GRAMMAR_TOOL_SECRET_KEYS = new Set(["libretranslate_api_key"]);
+const INTEGRATION_NUMBER_KEYS = new Set([
+  "port",
+  "guest_daily_limit",
+  "user_daily_limit",
+]);
 
 function isTruthySetting(value: string | undefined): boolean {
   const v = (value ?? "").toLowerCase();
@@ -61,6 +78,7 @@ export function AdminIntegrationsPanel({ token }: { token: string }) {
 
   const [mailForm, setMailForm] = useState<Record<string, string>>({});
   const [googleForm, setGoogleForm] = useState<Record<string, string>>({});
+  const [grammarToolForm, setGrammarToolForm] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState<SettingsGroup | null>(null);
 
@@ -80,12 +98,13 @@ export function AdminIntegrationsPanel({ token }: { token: string }) {
       const next: Record<string, string> = {};
       for (const [key, meta] of Object.entries(res.data.fields)) {
         if (meta.secret) next[key] = "";
-        else if (key === "oauth_enabled") {
+        else if (key === "oauth_enabled" || GRAMMAR_TOOL_BOOL_KEYS.has(key)) {
           next[key] = isTruthySetting(meta.value ?? undefined) ? "1" : "0";
         } else next[key] = meta.value ?? "";
       }
       if (group === "mail") setMailForm(next);
-      else setGoogleForm(next);
+      else if (group === "google") setGoogleForm(next);
+      else setGrammarToolForm(next);
     },
     [locale, token],
   );
@@ -127,7 +146,7 @@ export function AdminIntegrationsPanel({ token }: { token: string }) {
     (async () => {
       setLoading(true);
       try {
-        await Promise.all([loadGroup("mail"), loadGroup("google")]);
+        await Promise.all([loadGroup("mail"), loadGroup("google"), loadGroup("grammar_tool")]);
         if (!cancelled) {
           await Promise.all([fetchMailHealth(), fetchGoogleHealth()]);
         }
@@ -145,10 +164,11 @@ export function AdminIntegrationsPanel({ token }: { token: string }) {
   const saveGroup = async (group: SettingsGroup, keys: readonly string[], e: FormEvent) => {
     e.preventDefault();
     setSaving(group);
-    const source = group === "mail" ? mailForm : googleForm;
+    const source =
+      group === "mail" ? mailForm : group === "google" ? googleForm : grammarToolForm;
     const body: Record<string, string> = {};
     for (const key of keys) {
-      if (key === "password" || key === "client_secret") {
+      if (key === "password" || key === "client_secret" || GRAMMAR_TOOL_SECRET_KEYS.has(key)) {
         if (source[key]) body[key] = source[key];
       } else {
         body[key] = source[key] ?? "";
@@ -196,8 +216,10 @@ export function AdminIntegrationsPanel({ token }: { token: string }) {
       <Label htmlFor={`${group}-${key}`}>{t(`field.${group}.${key}`)}</Label>
       <Input
         id={`${group}-${key}`}
-        type={secret ? "password" : key === "port" ? "number" : "text"}
+        type={secret ? "password" : INTEGRATION_NUMBER_KEYS.has(key) ? "number" : "text"}
         autoComplete="off"
+        min={INTEGRATION_NUMBER_KEYS.has(key) ? 0 : undefined}
+        step={INTEGRATION_NUMBER_KEYS.has(key) ? 1 : undefined}
         placeholder={secret ? t("secretPlaceholder") : undefined}
         value={form[key] ?? ""}
         onChange={(ev) => setForm((prev) => ({ ...prev, [key]: ev.target.value }))}
@@ -339,6 +361,64 @@ export function AdminIntegrationsPanel({ token }: { token: string }) {
               );
             })}
             <Button type="submit" disabled={saving === "google"}>
+              {t("save")}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("grammarToolTitle")}</CardTitle>
+          <CardDescription>{t("grammarToolDesc")}</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <form
+            onSubmit={(e) => void saveGroup("grammar_tool", GRAMMAR_TOOL_KEYS, e)}
+            className="grid gap-3 sm:grid-cols-2"
+          >
+            {GRAMMAR_TOOL_KEYS.map((key) => {
+              if (GRAMMAR_TOOL_BOOL_KEYS.has(key)) {
+                const enabled = isTruthySetting(grammarToolForm[key]);
+                return (
+                  <div
+                    key={key}
+                    className="space-y-2 rounded-md border border-border p-3 sm:col-span-2"
+                  >
+                    <div className="flex items-start gap-3">
+                      <input
+                        id={`grammar_tool-${key}`}
+                        type="checkbox"
+                        className="mt-1 size-4 shrink-0 rounded border border-input accent-primary"
+                        checked={enabled}
+                        onChange={(ev) =>
+                          setGrammarToolForm((prev) => ({
+                            ...prev,
+                            [key]: ev.target.checked ? "1" : "0",
+                          }))
+                        }
+                      />
+                      <div className="space-y-1">
+                        <Label htmlFor={`grammar_tool-${key}`} className="cursor-pointer font-medium">
+                          {t(`field.grammar_tool.${key}`)}
+                        </Label>
+                        <p className="text-xs text-muted-foreground">
+                          {tInt(`grammarToolHint.${key}`)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+              return renderField(
+                "grammar_tool",
+                key,
+                grammarToolForm,
+                setGrammarToolForm,
+                GRAMMAR_TOOL_SECRET_KEYS.has(key),
+              );
+            })}
+            <Button type="submit" disabled={saving === "grammar_tool"} className="sm:col-span-2">
               {t("save")}
             </Button>
           </form>

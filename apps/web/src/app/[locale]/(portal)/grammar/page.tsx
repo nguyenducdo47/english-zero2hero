@@ -27,6 +27,11 @@ export default async function GrammarIndexPage() {
   return (
     <div className="space-y-8">
       <PageHeader title={t("title")} description={t("intro")} />
+      <p className="-mt-4 text-sm">
+        <Link href="/grammar/analyze" className="font-medium text-primary hover:underline">
+          {t("analyzeCta")}
+        </Link>
+      </p>
       {groups
         .slice()
         .sort((a, b) => a.sort_order - b.sort_order)

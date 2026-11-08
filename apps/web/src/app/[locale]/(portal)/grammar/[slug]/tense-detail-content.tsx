@@ -84,14 +84,22 @@ export async function TenseDetailContent({ params }: Props) {
 
       <ExampleList title={t("examples")} examples={tense.examples} />
 
-      {group && (
+      <div className="flex flex-wrap gap-3">
         <Link
-          href={`/grammar/groups/${group.slug}/quiz`}
+          href={`/grammar/${tense.slug}/quiz`}
           className={cn(buttonVariants({ size: "lg" }), "inline-flex")}
         >
-          {t("quizGroup", { group: groupName(group, locale) })}
+          {t("quizTense", { tense: tenseName(tense, locale) })}
         </Link>
-      )}
+        {group ? (
+          <Link
+            href={`/grammar/groups/${group.slug}/quiz`}
+            className={cn(buttonVariants({ variant: "outline", size: "lg" }), "inline-flex")}
+          >
+            {t("quizGroup", { group: groupName(group, locale) })}
+          </Link>
+        ) : null}
+      </div>
     </article>
   );
 }

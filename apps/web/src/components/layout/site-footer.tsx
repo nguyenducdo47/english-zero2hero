@@ -1,10 +1,14 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { SiteFooterCopyright } from "@/components/layout/site-footer-copyright";
 import { Separator } from "@/components/ui/separator";
+import type { Locale } from "@/i18n/routing";
+import { fetchFooterStaticPages } from "@/lib/static-pages";
 
 export async function SiteFooter() {
   const t = await getTranslations("footer");
+  const locale = (await getLocale()) as Locale;
+  const footerCms = await fetchFooterStaticPages(locale);
 
   return (
     <footer className="mt-auto border-t border-border bg-muted/30">
@@ -22,6 +26,11 @@ export async function SiteFooter() {
           <Link href="/exams" className="hover:text-primary">
             {t("exams")}
           </Link>
+          {footerCms.map((p) => (
+            <Link key={p.slug} className="hover:text-primary" href={`/${p.slug}`}>
+              {p.title}
+            </Link>
+          ))}
         </div>
         <Separator />
         <p>{t("tagline")}</p>

@@ -42,10 +42,30 @@ Resolve merges: global → page (`*` then locale) → page-specific defaults. Ad
 4. **Preview** — Google + OG cards, hreflang read-only
 5. **Validation** — duplicates, missing fields, OG warnings
 
+## Sitemap admin
+
+**Path:** `/admin/content/sitemap` (sidebar **Sitemap**, same admin auth as SEO).
+
+| Area | Behavior |
+|------|----------|
+| **System pages** | Read-only list built from `seo_routes` registry + `resolveRouteKey` robots. Filter indexed vs excluded; excluded reasons: static `noindex` in registry, or `seo_pages.robots_index = false`. Quick **Allow/Block index** calls `PUT /api/v1/admin/seo/pages` with `robots_index`. |
+| **Custom URLs** | CRUD on `seo_sitemap_urls`: path (`/…`) or absolute URL, optional locale (`vi` / `en` / both), optional `priority` and `changefreq`, `is_enabled`, `sort_order`. Merged into public sitemap after registry URLs. |
+| **Overview** | Stats, canonical base, link to live `{canonical_base}/sitemap.xml`. |
+
+### Sitemap API
+
+| Method | Path | Auth |
+|--------|------|------|
+| GET | `/api/v1/admin/sitemap/overview` | Admin |
+| GET/POST/PATCH/DELETE | `/api/v1/admin/sitemap/custom` (+ `{id}`) | Admin |
+| GET | `/api/v1/seo/sitemap-entries` | Public (includes custom URLs when enabled) |
+
+Public entries may include `priority` and `changefreq` (custom URLs only). Next.js `app/sitemap.ts` maps them to `MetadataRoute.Sitemap`.
+
 ## Operations
 
-- **Cache:** Next.js tags fetches with `seo` (~60s). Admin **Clear SEO cache** (or save/upload) calls `POST /api/v1/admin/seo/cache/clear` and `/api/admin/seo/revalidate` to refresh the learner portal immediately.
-- Set `canonical_base` and `NEXT_PUBLIC_SITE_URL` to the production origin for correct canonical/sitemap URLs.
+- **Cache:** Next.js tags fetches with `seo` (~60s). Admin **Clear SEO cache** (or save/upload) calls `POST /api/v1/admin/seo/cache/clear` and `/api/admin/seo/revalidate` to refresh the learner portal immediately. Use the same control on **Sitemap** after changing custom URLs or page index flags.
+- Set **`canonical_base`** (SEO → Technical) and **`NEXT_PUBLIC_SITE_URL`** (web) to the **frontend** origin. API fallback for sitemap/canonical is `FRONTEND_URL` in `apps/api/.env`, not `APP_URL`.
 - **Favicon / site logo / OG / org logo:** URL or admin upload (`POST /api/v1/admin/seo/assets` → `storage/app/public/seo/*`). Run `php artisan storage:link` on the API app so `/storage/...` URLs work.
 
 ## Security

@@ -1,8 +1,10 @@
 import type { MetadataRoute } from "next";
 import { getAllTenseSlugs } from "@/lib/grammar-data";
 import { routing } from "@/i18n/routing";
+import { publicSiteOrigin, toPublicSiteUrl } from "@/lib/public-site-url";
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
-const site = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const site = publicSiteOrigin();
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
@@ -12,15 +14,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
     if (!response.ok) throw new Error(String(response.status));
     const res = (await response.json()) as {
-      data: { url: string; lastModified?: string; index: boolean }[];
+      data: {
+        url: string;
+        lastModified?: string;
+        index: boolean;
+        priority?: number;
+        changefreq?: string;
+      }[];
     };
+
+    type Freq = NonNullable<MetadataRoute.Sitemap[number]["changeFrequency"]>;
 
     const fromApi = res.data
       .filter((e) => e.index)
-      .map((e) => ({
-        url: e.url.startsWith("http") ? e.url : `${site}${e.url}`,
-        lastModified: e.lastModified ? new Date(e.lastModified) : new Date(),
-      }));
+      .map((e) => {
+        const row: MetadataRoute.Sitemap[number] = {
+          url: toPublicSiteUrl(e.url),
+          lastModified: e.lastModified ? new Date(e.lastModified) : new Date(),
+        };
+        if (e.changefreq) {
+          row.changeFrequency = e.changefreq as Freq;
+        }
+        if (e.priority != null) {
+          row.priority = e.priority;
+        }
+        return row;
+      });
 
     if (fromApi.length > 0) {
       return fromApi;

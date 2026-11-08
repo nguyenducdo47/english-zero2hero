@@ -2,6 +2,7 @@
 export const SEO_STATIC_ROUTE_KEYS = [
   "home",
   "grammar",
+  "grammar-analyze",
   "exams",
   "mock-exams",
   "roadmap",

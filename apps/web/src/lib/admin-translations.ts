@@ -1,4 +1,9 @@
-export type TranslationEntityType = "tense_group" | "tense" | "question";
+export type TranslationEntityType =
+  | "tense_group"
+  | "tense"
+  | "question"
+  | "static_page"
+  | "content_post";
 
 export function questionIdParam(selectedId: string): number | null {
   const id = Number.parseInt(selectedId, 10);
@@ -40,6 +45,16 @@ export const TRANSLATION_SCHEMA: Record<TranslationEntityType, TranslationFieldD
   question: [
     { key: "prompt", multiline: true },
     { key: "explanation", multiline: true },
+  ],
+  static_page: [
+    { key: "title", multiline: false },
+    { key: "excerpt", multiline: true },
+    { key: "body", multiline: true },
+  ],
+  content_post: [
+    { key: "title", multiline: false },
+    { key: "excerpt", multiline: true },
+    { key: "body", multiline: true },
   ],
 };
 

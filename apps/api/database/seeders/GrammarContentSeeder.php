@@ -6,6 +6,7 @@ use App\Models\Question;
 use App\Models\Tense;
 use App\Models\TenseGroup;
 use App\Services\ContentTranslationImporter;
+use App\Services\GrammarQuestionImportService;
 use Illuminate\Database\Seeder;
 
 class GrammarContentSeeder extends Seeder
@@ -19,6 +20,7 @@ class GrammarContentSeeder extends Seeder
         $grammar = json_decode(file_get_contents($grammarPath), true);
         $quiz = json_decode(file_get_contents($quizPath), true);
         $importer = new ContentTranslationImporter;
+        $questionImport = new GrammarQuestionImportService($importer);
 
         $groupIds = [];
         foreach ($grammar['groups'] as $group) {
@@ -57,12 +59,16 @@ class GrammarContentSeeder extends Seeder
                     'synonyms' => $item['synonyms'] ?? [],
                 ];
 
+            $groupId = $groupIds[$item['tense_group_slug']];
+            $promptEn = trim((string) ($item['prompt_en'] ?? ''));
+
             $question = Question::query()->create([
-                'tense_group_id' => $groupIds[$item['tense_group_slug']],
+                'tense_group_id' => $groupId,
                 'exam_id' => null,
                 'type' => $item['type'],
                 'payload' => $payload,
                 'sort_order' => $index + 1,
+                'source_hash' => $questionImport->sourceHash($groupId, $promptEn),
             ]);
 
             $importer->apply($question, $importer->mapFromContent($item, ['prompt', 'explanation']));

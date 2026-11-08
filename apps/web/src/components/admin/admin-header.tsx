@@ -6,6 +6,7 @@ import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { adminBreadcrumbKey } from "@/lib/admin-nav";
 import { useAuthToken } from "@/hooks/use-auth-token";
 import { apiPost, setStoredToken } from "@/lib/api";
+import { AdminChromeActions } from "@/components/admin/admin-chrome-actions";
 import { AdminClearCacheButton } from "@/components/admin/admin-clear-cache-button";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -72,6 +73,7 @@ export function AdminHeader({ onMenuClick }: Props) {
         </nav>
       </div>
       <div className="flex shrink-0 items-center gap-2">
+        <AdminChromeActions />
         <AdminClearCacheButton />
         <Link
           href="/dashboard"

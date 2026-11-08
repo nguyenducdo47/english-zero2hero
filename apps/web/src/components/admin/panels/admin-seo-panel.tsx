@@ -807,14 +807,16 @@ export function AdminSeoPanel({ token }: { token: string }) {
             <CardHeader>
               <CardTitle>{t("seo.previewGoogle")}</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-1 text-sm">
-              <p className="text-lg text-[#1a0dab]">
-                {preview?.title ?? globalForm.default_title}
-              </p>
-              <p className="text-[#006621]">{preview?.canonical ?? "—"}</p>
-              <p className="text-muted-foreground">
-                {preview?.description ?? globalForm.default_description}
-              </p>
+            <CardContent className="text-sm">
+              <div className="space-y-1 rounded-md border border-border bg-white p-3 text-zinc-900 dark:border-zinc-700 dark:bg-zinc-50">
+                <p className="text-lg text-[#1a0dab]">
+                  {preview?.title ?? globalForm.default_title}
+                </p>
+                <p className="text-[#006621]">{preview?.canonical ?? "—"}</p>
+                <p className="text-zinc-600">
+                  {preview?.description ?? globalForm.default_description}
+                </p>
+              </div>
             </CardContent>
           </Card>
           <Card>

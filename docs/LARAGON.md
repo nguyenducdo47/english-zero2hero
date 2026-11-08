@@ -66,3 +66,21 @@ E2H_CRAWL_WHITELIST=example.com,openstax.org
 cd apps/api
 php artisan queue:work
 ```
+
+## Grammar question bank (crawl / import)
+
+```bash
+cd apps/api
+php artisan migrate
+php artisan grammar:import-questions
+# hoặc đồng bộ toàn bộ nội dung grammar + 60 câu mẫu:
+# php artisan db:seed --class=GrammarContentSeeder
+```
+
+Lịch tự động (03:00, timezone `APP_TIMEZONE`): `CrawlGrammarQuestionsJob` — cần cron/Task Scheduler gọi `php artisan schedule:run` mỗi phút.
+
+Admin → Questions → **Nguồn crawl** (CRUD URL + adapter) và **Crawl kho câu hỏi** (local: sync; production: queue).
+
+Chi tiết: [`docs/GRAMMAR_QUESTION_CRAWL.md`](GRAMMAR_QUESTION_CRAWL.md).
+
+Biến: `GRAMMAR_GROUP_QUIZ_LIMIT`, `GRAMMAR_QUESTION_FEED_URLS` (legacy), `E2H_CRAWL_WHITELIST`, `GRAMMAR_CRAWL_*`.

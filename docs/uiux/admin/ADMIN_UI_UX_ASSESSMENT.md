@@ -2,7 +2,7 @@
 
 **Date:** 2026-03-23  
 **Scope:** English Zero2Hero — `apps/web` + `apps/api`  
-**Status:** Assessment complete — **no separate Admin layout yet**
+**Status:** Assessment complete — **Admin route group + shell shipped** (see §7 for i18n / dark mode)
 
 ---
 
@@ -100,12 +100,14 @@ All under `auth:sanctum` + middleware `admin` (`users.is_admin`).
 
 | Rule | Current state |
 |------|----------------|
-| Separate layout | ❌ Shared `[locale]/layout.tsx` |
-| Separate header | ❌ `SiteHeader` + `AdminNavLink` |
-| Separate sidebar | ❌ None |
+| Separate layout | ✅ `(portal)` vs `(admin)` under `[locale]`; admin không dùng `SiteHeader`/`SiteFooter` |
+| Separate header | ✅ `AdminHeader` + breadcrumb; link “Về cổng học viên” |
+| Separate sidebar | ✅ `AdminSidebar` + `lib/admin-nav.ts` |
+| UI locale (vi/en) | ✅ Namespace `admin` trong `messages/*`; `LocaleSwitcher` trên admin header (`router.replace` giữ path `/admin/...`) |
+| Dark mode | ✅ Chung `ThemeInit` + `theme-storage` với portal; token `--admin-*` trong `admin-theme.css`; `ThemeToggle` trên admin header |
 | No gamification in admin | ✅ Admin pages have no XP/streak UI |
-| Separate design tokens | ❌ Same `globals.css` / shadcn theme |
-| Shared low-level utils | ✅ `lib/api`, toast, shadcn primitives (OK) |
+| Separate design tokens | ✅ `admin-theme.css` scoped `.admin-root` (+ `.dark .admin-root`) |
+| Shared low-level utils | ✅ `lib/api` (gửi `Accept-Language` / `X-Locale`), toast, shadcn primitives (OK) |
 
 ---
 

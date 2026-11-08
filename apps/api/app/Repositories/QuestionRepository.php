@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Question;
+use App\Models\Tense;
 use App\Models\TenseGroup;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -13,11 +14,67 @@ class QuestionRepository extends BaseRepository
         parent::__construct($model);
     }
 
+    /**
+     * @return list<array{slug: string, count: int}>
+     */
+    public function grammarPoolCountsByGroup(): array
+    {
+        $counts = $this->query()
+            ->whereNotNull('tense_group_id')
+            ->whereNull('exam_id')
+            ->selectRaw('tense_group_id, count(*) as question_count')
+            ->groupBy('tense_group_id')
+            ->pluck('question_count', 'tense_group_id');
+
+        if ($counts->isEmpty()) {
+            return [];
+        }
+
+        $slugs = TenseGroup::query()
+            ->whereIn('id', $counts->keys())
+            ->pluck('slug', 'id');
+
+        return $counts
+            ->map(fn ($count, $groupId) => [
+                'slug' => $slugs[$groupId] ?? 'unknown',
+                'count' => (int) $count,
+            ])
+            ->values()
+            ->all();
+    }
+
+    public function countGrammarForGroup(TenseGroup $group): int
+    {
+        return $this->query()
+            ->where('tense_group_id', $group->id)
+            ->whereNull('exam_id')
+            ->count();
+    }
+
     public function randomGrammarQuizForGroup(TenseGroup $group, int $limit): Collection
     {
         return $this->query()
             ->with('localeEntries')
             ->where('tense_group_id', $group->id)
+            ->whereNull('exam_id')
+            ->inRandomOrder()
+            ->limit($limit)
+            ->get();
+    }
+
+    public function countGrammarForTense(Tense $tense): int
+    {
+        return $this->query()
+            ->where('tense_id', $tense->id)
+            ->whereNull('exam_id')
+            ->count();
+    }
+
+    public function randomGrammarQuizForTense(Tense $tense, int $limit): Collection
+    {
+        return $this->query()
+            ->with('localeEntries')
+            ->where('tense_id', $tense->id)
             ->whereNull('exam_id')
             ->inRandomOrder()
             ->limit($limit)

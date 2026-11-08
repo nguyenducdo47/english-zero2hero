@@ -2,7 +2,7 @@
 
 return [
 
-    'groups' => ['mail', 'google'],
+    'groups' => ['mail', 'google', 'grammar_tool'],
 
     'keys' => [
         'mail.mailer' => [
@@ -69,6 +69,42 @@ return [
             'group' => 'google',
             'secret' => false,
             'env' => 'GOOGLE_REDIRECT_URI',
+            'default' => null,
+        ],
+        'grammar_tool.enabled' => [
+            'group' => 'grammar_tool',
+            'secret' => false,
+            'env' => 'GRAMMAR_TOOL_ENABLED',
+            'default' => '1',
+        ],
+        'grammar_tool.guest_daily_limit' => [
+            'group' => 'grammar_tool',
+            'secret' => false,
+            'env' => 'GRAMMAR_TOOL_GUEST_DAILY',
+            'default' => '10',
+        ],
+        'grammar_tool.user_daily_limit' => [
+            'group' => 'grammar_tool',
+            'secret' => false,
+            'env' => 'GRAMMAR_TOOL_USER_DAILY',
+            'default' => '50',
+        ],
+        'grammar_tool.libretranslate_enabled' => [
+            'group' => 'grammar_tool',
+            'secret' => false,
+            'env' => 'GRAMMAR_TOOL_LIBRETRANSLATE_ENABLED',
+            'default' => '1',
+        ],
+        'grammar_tool.libretranslate_url' => [
+            'group' => 'grammar_tool',
+            'secret' => false,
+            'env' => 'GRAMMAR_TOOL_LIBRETRANSLATE_URL',
+            'default' => 'https://libretranslate.com/translate',
+        ],
+        'grammar_tool.libretranslate_api_key' => [
+            'group' => 'grammar_tool',
+            'secret' => true,
+            'env' => 'GRAMMAR_TOOL_LIBRETRANSLATE_API_KEY',
             'default' => null,
         ],
     ],

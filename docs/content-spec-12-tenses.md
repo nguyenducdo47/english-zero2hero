@@ -64,7 +64,7 @@
 
 - Giải thích `usage_vi`, `pitfalls_vi`, `explanation_vi` bằng tiếng Việt, ví dụ EN.
 - Mỗi thì ≥ 2 examples.
-- Mỗi `tense_group` ≥ 15 câu trong pool; quiz random lấy 10 câu/session.
+- Mỗi `tense_group` ≥ 15 câu trong pool; quiz random lấy **15 câu/session** (giới hạn theo kho thực tế).
 
 ## 5. File nguồn trong repo
 

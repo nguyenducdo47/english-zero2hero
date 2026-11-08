@@ -16,13 +16,18 @@ class GrammarQuizQueryRequest extends FormRequest
      */
     public function rules(): array
     {
+        $max = (int) config('grammar.group_quiz.max_limit', 30);
+        $min = (int) config('grammar.group_quiz.min_limit', 1);
+
         return [
-            'limit' => ['sometimes', 'integer', 'min:1', 'max:50'],
+            'limit' => ['sometimes', 'integer', 'min:'.$min, 'max:'.$max],
         ];
     }
 
     public function limit(): int
     {
-        return (int) $this->query('limit', 10);
+        $default = (int) config('grammar.group_quiz.default_limit', 15);
+
+        return (int) $this->query('limit', $default);
     }
 }

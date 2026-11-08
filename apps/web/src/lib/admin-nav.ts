@@ -2,12 +2,15 @@ import type { LucideIcon } from "lucide-react";
 import {
   BookOpen,
   ClipboardList,
+  FileText,
   Globe,
+  Newspaper,
   HelpCircle,
   Languages,
   LayoutDashboard,
   Layers,
   Plug,
+  Map,
   Search,
   Shield,
   Users,
@@ -66,6 +69,18 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
         href: "/admin/content/tense-groups",
         labelKey: "nav.tenseGroups",
         icon: Layers,
+      },
+      {
+        id: "static-pages",
+        href: "/admin/content/static-pages",
+        labelKey: "nav.staticPages",
+        icon: FileText,
+      },
+      {
+        id: "articles",
+        href: "/admin/content/posts",
+        labelKey: "nav.articles",
+        icon: Newspaper,
       },
       {
         id: "tenses",
@@ -128,6 +143,8 @@ export function adminBreadcrumbKey(segment: string): string | null {
     integrations: "nav.integrations",
     users: "nav.users",
     roles: "nav.roles",
+    "static-pages": "nav.staticPages",
+    posts: "nav.articles",
   };
   return map[segment] ?? null;
 }

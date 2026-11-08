@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
+import { publicSiteOrigin, toPublicSiteUrl } from "@/lib/public-site-url";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const site = publicSiteOrigin();
 
 type RobotsApiRule = {
   userAgent: string;

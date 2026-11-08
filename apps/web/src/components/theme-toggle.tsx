@@ -8,8 +8,13 @@ import {
   type ResolvedTheme,
 } from "@/lib/theme-storage";
 import { useResolvedTheme } from "@/hooks/use-resolved-theme";
+import { cn } from "@/lib/utils";
 
-export function ThemeToggle() {
+type ThemeToggleProps = {
+  surface?: "portal" | "admin";
+};
+
+export function ThemeToggle({ surface = "portal" }: ThemeToggleProps) {
   const t = useTranslations("theme");
   const resolved = useResolvedTheme();
 
@@ -25,7 +30,12 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      className="rounded-lg border border-slate-300 bg-white p-1.5 text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+      className={cn(
+        "rounded-lg border p-1.5 transition",
+        surface === "admin"
+          ? "border-[var(--admin-border)] bg-[var(--admin-surface)] text-[var(--admin-text)] hover:bg-[var(--admin-sidebar-active)]"
+          : "border-slate-300 bg-white text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700",
+      )}
       aria-label={isDark ? t("switchToLight") : t("switchToDark")}
       title={isDark ? t("switchToLight") : t("switchToDark")}
     >

@@ -22,6 +22,7 @@ import { Label } from "@/components/ui/label";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import { Textarea } from "@/components/ui/textarea";
 import { isRichTextEmpty } from "@/lib/rich-text";
+import { AdminQuestionFeedsPanel } from "@/components/admin/panels/admin-question-feeds-panel";
 
 type GroupOpt = { id: number; slug: string; label?: string };
 type ExamOpt = { id: number; slug: string; title: string };
@@ -67,6 +68,56 @@ export function AdminQuestionsPanel({ token }: { token: string }) {
   const [confirmSaveOpen, setConfirmSaveOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Row | null>(null);
   const [saving, setSaving] = useState(false);
+  const [bankPools, setBankPools] = useState<Array<{ slug: string; count: number }>>([]);
+  const [lastCrawlAt, setLastCrawlAt] = useState<string | null>(null);
+  const [adapterKeys, setAdapterKeys] = useState<string[]>([]);
+  const [crawling, setCrawling] = useState(false);
+
+  const loadBankStatus = useCallback(async () => {
+    try {
+      const res = await apiGet<{
+        data: {
+          pools: Array<{ slug: string; count: number }>;
+          last_crawl: { finished_at?: string } | null;
+          adapters?: string[];
+        };
+      }>("/api/v1/admin/grammar/question-bank/status", locale, token);
+      setBankPools(res.data.pools);
+      setLastCrawlAt(res.data.last_crawl?.finished_at ?? null);
+      setAdapterKeys(res.data.adapters ?? []);
+    } catch {
+      setBankPools([]);
+      setLastCrawlAt(null);
+    }
+  }, [locale, token]);
+
+  const runBankCrawl = async () => {
+    setCrawling(true);
+    try {
+      const res = await apiPost<{
+        data: {
+          mode: string;
+          summary?: { imported: number; skipped: number };
+        };
+      }>("/api/v1/admin/grammar/question-bank/crawl", {}, locale, token);
+      if (res.data.mode === "sync" && res.data.summary) {
+        toast.success(
+          tToast("successTitle"),
+          t("content.questions.crawlOk", {
+            imported: res.data.summary.imported,
+            skipped: res.data.summary.skipped,
+          }),
+        );
+      } else {
+        toast.success(tToast("successTitle"), t("content.questions.crawlQueued"));
+      }
+      await Promise.all([loadBankStatus(), load()]);
+    } catch (e) {
+      toast.error(tToast("errorTitle"), formatApiError(e));
+    } finally {
+      setCrawling(false);
+    }
+  };
 
   const loadMeta = useCallback(async () => {
     const [gRes, eRes] = await Promise.all([
@@ -201,6 +252,29 @@ export function AdminQuestionsPanel({ token }: { token: string }) {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-end gap-3">
+      {scope === "grammar" || scope === "all" ? (
+        <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm">
+          <p className="font-medium">{t("content.questions.bankStatusTitle")}</p>
+          <p className="mt-1 text-muted-foreground">
+            {bankPools.length
+              ? bankPools.map((p) => `${p.slug}: ${p.count}`).join(" · ")
+              : "—"}
+          </p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            {lastCrawlAt
+              ? t("content.questions.bankLastCrawl", { at: lastCrawlAt })
+              : t("content.questions.bankNeverCrawled")}
+          </p>
+        </div>
+      ) : null}
+      {scope === "grammar" || scope === "all" ? (
+        <AdminQuestionFeedsPanel
+          adapterKeys={adapterKeys}
+          groups={groups}
+          token={token}
+          onCrawlAll={() => void runBankCrawl()}
+        />
+      ) : null}
         <div className="space-y-1">
           <Label>{t("content.questions.filterScope")}</Label>
           <select
@@ -256,10 +330,20 @@ export function AdminQuestionsPanel({ token }: { token: string }) {
             </select>
           </div>
         ) : null}
-        <Button className="ml-auto" type="button" onClick={openCreate}>
-          <Plus className="size-4" />
-          {t("content.questions.add")}
-        </Button>
+        <div className="ml-auto flex flex-wrap gap-2">
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={crawling}
+            onClick={() => void runBankCrawl()}
+          >
+            {crawling ? t("content.questions.crawlingBank") : t("content.questions.crawlBank")}
+          </Button>
+          <Button type="button" onClick={openCreate}>
+            <Plus className="size-4" />
+            {t("content.questions.add")}
+          </Button>
+        </div>
       </div>
 
       {loading ? (

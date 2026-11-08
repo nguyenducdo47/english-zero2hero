@@ -33,4 +33,9 @@ class GrammarController extends Controller
     {
         return response()->json($this->grammar->quizForGroup($slug, $request->limit()));
     }
+
+    public function tenseQuiz(GrammarQuizQueryRequest $request, string $slug): JsonResponse
+    {
+        return response()->json($this->grammar->quizForTense($slug, $request->limit()));
+    }
 }

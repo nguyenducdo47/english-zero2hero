@@ -158,7 +158,71 @@ class SettingsService
             'services.google.redirect' => $values['google.redirect']
                 ?? config('services.google.redirect')
                 ?? (rtrim((string) config('app.url'), '/').'/api/v1/auth/google/callback'),
+            'grammar_tool.enabled' => $this->grammarToolBool($values, 'grammar_tool.enabled', 'grammar_tool.enabled'),
+            'grammar_tool.guest_daily_limit' => $this->grammarToolInt($values, 'grammar_tool.guest_daily_limit', 'grammar_tool.guest_daily_limit'),
+            'grammar_tool.user_daily_limit' => $this->grammarToolInt($values, 'grammar_tool.user_daily_limit', 'grammar_tool.user_daily_limit'),
+            'grammar_tool.libretranslate_enabled' => $this->grammarToolBool($values, 'grammar_tool.libretranslate_enabled', 'grammar_tool.libretranslate_enabled'),
+            'grammar_tool.libretranslate_url' => $values['grammar_tool.libretranslate_url']
+                ?? config('grammar_tool.libretranslate_url'),
+            'grammar_tool.libretranslate_api_key' => $values['grammar_tool.libretranslate_api_key']
+                ?? config('grammar_tool.libretranslate_api_key'),
         ]);
+    }
+
+    public function isGrammarToolEnabled(): bool
+    {
+        return (bool) config('grammar_tool.enabled', true);
+    }
+
+    public function grammarToolGuestDailyLimit(): int
+    {
+        return max(0, (int) config('grammar_tool.guest_daily_limit', 10));
+    }
+
+    public function grammarToolUserDailyLimit(): int
+    {
+        return max(0, (int) config('grammar_tool.user_daily_limit', 50));
+    }
+
+    public function isGrammarToolLibreTranslateEnabled(): bool
+    {
+        return (bool) config('grammar_tool.libretranslate_enabled', true);
+    }
+
+    public function grammarToolLibreTranslateUrl(): string
+    {
+        return (string) config('grammar_tool.libretranslate_url', 'https://libretranslate.com/translate');
+    }
+
+    public function grammarToolLibreTranslateApiKey(): string
+    {
+        return (string) config('grammar_tool.libretranslate_api_key', '');
+    }
+
+    /**
+     * @param  array<string, mixed>  $values
+     */
+    private function grammarToolBool(array $values, string $key, string $configKey): bool
+    {
+        $raw = $values[$key] ?? null;
+        if ($raw === null || $raw === '') {
+            return (bool) config($configKey);
+        }
+
+        return self::parseBool($raw);
+    }
+
+    /**
+     * @param  array<string, mixed>  $values
+     */
+    private function grammarToolInt(array $values, string $key, string $configKey): int
+    {
+        $raw = $values[$key] ?? null;
+        if ($raw === null || $raw === '') {
+            return (int) config($configKey);
+        }
+
+        return max(0, (int) $raw);
     }
 
     public function isGoogleOAuthEnabled(): bool

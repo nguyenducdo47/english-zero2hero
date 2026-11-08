@@ -11,8 +11,8 @@ class Question extends Model
     use HasTranslations;
 
     protected $fillable = [
-        'tense_group_id', 'exam_id', 'type',
-        'payload', 'sort_order',
+        'tense_group_id', 'tense_id', 'exam_id', 'type',
+        'payload', 'sort_order', 'source_hash',
     ];
 
     protected function casts(): array
@@ -25,6 +25,11 @@ class Question extends Model
     public function tenseGroup(): BelongsTo
     {
         return $this->belongsTo(TenseGroup::class, 'tense_group_id');
+    }
+
+    public function tense(): BelongsTo
+    {
+        return $this->belongsTo(Tense::class, 'tense_id');
     }
 
     public function exam(): BelongsTo

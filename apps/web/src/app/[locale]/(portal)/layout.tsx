@@ -4,6 +4,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SeoJsonLd } from "@/components/seo/seo-json-ld";
 import { fetchSeoResolve } from "@/lib/seo-metadata";
+import { fetchHeaderNavLinks } from "@/lib/static-pages";
 import type { Locale } from "@/i18n/routing";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -24,13 +25,17 @@ export default async function PortalLayout({
   children: React.ReactNode;
 }) {
   const locale = (await getLocale()) as Locale;
-  const seo = await fetchSeoResolve("/", locale);
+  const [seo, cmsLinks] = await Promise.all([
+    fetchSeoResolve("/", locale),
+    fetchHeaderNavLinks(locale),
+  ]);
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className="flex min-h-dvh flex-col overflow-x-hidden">
       <SeoJsonLd blocks={seo?.json_ld ?? []} />
       <SiteHeader
         brandName={seo?.site_name}
+        cmsLinks={cmsLinks}
         logoUrl={seo?.site_logo_url}
       />
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 md:py-10">

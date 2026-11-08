@@ -633,7 +633,7 @@ export function RichTextEditor({
   value,
   onChange,
   placeholder,
-  minHeight = 80,
+  minHeight = 200,
   className,
   disabled,
   onImageUpload,

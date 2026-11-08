@@ -14,6 +14,8 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             GrammarContentSeeder::class,
             ExamSeeder::class,
+            StaticPageSeeder::class,
+            ContentPostSeeder::class,
         ]);
     }
 }

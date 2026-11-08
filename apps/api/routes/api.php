@@ -12,15 +12,23 @@ use App\Http\Controllers\Api\V1\LocaleController;
 use App\Http\Controllers\Api\V1\ContentSourceController;
 use App\Http\Controllers\Api\V1\ExamAttemptController;
 use App\Http\Controllers\Api\V1\ExamController;
+use App\Http\Controllers\Api\V1\GrammarAnalysisController;
 use App\Http\Controllers\Api\V1\GrammarController;
 use App\Http\Controllers\Api\V1\MockExamController;
 use App\Http\Controllers\Api\V1\QuizAttemptController;
 use App\Http\Controllers\Api\V1\SeoController;
+use App\Http\Controllers\Api\V1\ContentPostController;
+use App\Http\Controllers\Api\V1\StaticPageController;
 use App\Http\Controllers\Api\V1\UserProgressController;
 use App\Http\Controllers\Api\V1\Admin\ExamAdminController;
+use App\Http\Controllers\Api\V1\Admin\GrammarQuestionBankController;
+use App\Http\Controllers\Api\V1\Admin\GrammarQuestionFeedAdminController;
 use App\Http\Controllers\Api\V1\Admin\QuestionAdminController;
 use App\Http\Controllers\Api\V1\Admin\RoleController;
 use App\Http\Controllers\Api\V1\Admin\SeoController as AdminSeoController;
+use App\Http\Controllers\Api\V1\Admin\ContentPostAdminController;
+use App\Http\Controllers\Api\V1\Admin\StaticPageAdminController;
+use App\Http\Controllers\Api\V1\Admin\SitemapAdminController;
 use App\Http\Controllers\Api\V1\Admin\TenseAdminController;
 use App\Http\Controllers\Api\V1\Admin\TenseGroupAdminController;
 use App\Http\Controllers\Api\V1\Admin\UserAdminController;
@@ -32,11 +40,19 @@ Route::prefix('v1')->group(function (): void {
     Route::get('seo/sitemap-entries', [SeoController::class, 'sitemap']);
     Route::get('seo/robots-rules', [SeoController::class, 'robots']);
 
+    Route::get('pages', [StaticPageController::class, 'index']);
+    Route::get('pages/{hubSlug}/posts', [ContentPostController::class, 'hubPosts']);
+    Route::get('pages/{slug}', [StaticPageController::class, 'show']);
+    Route::get('blog/{slug}', [ContentPostController::class, 'showBlog']);
+    Route::get('news/{slug}', [ContentPostController::class, 'showNews']);
+
     Route::prefix('grammar')->group(function (): void {
         Route::get('tense-groups', [GrammarController::class, 'groups']);
         Route::get('tenses', [GrammarController::class, 'tenses']);
+        Route::get('tenses/{slug}/quiz', [GrammarController::class, 'tenseQuiz']);
         Route::get('tenses/{slug}', [GrammarController::class, 'show']);
         Route::get('tense-groups/{slug}/quiz', [GrammarController::class, 'quiz']);
+        Route::post('analyze', [GrammarAnalysisController::class, 'store']);
     });
 
     Route::post('quizzes/tense-groups/{slug}/attempts', [QuizAttemptController::class, 'store']);
@@ -97,6 +113,15 @@ Route::prefix('v1')->group(function (): void {
             Route::patch('questions/{question}', [QuestionAdminController::class, 'update']);
             Route::delete('questions/{question}', [QuestionAdminController::class, 'destroy']);
 
+            Route::get('grammar/question-bank/status', [GrammarQuestionBankController::class, 'status']);
+            Route::post('grammar/question-bank/crawl', [GrammarQuestionBankController::class, 'crawl']);
+
+            Route::get('grammar/question-feeds', [GrammarQuestionFeedAdminController::class, 'index']);
+            Route::post('grammar/question-feeds', [GrammarQuestionFeedAdminController::class, 'store']);
+            Route::patch('grammar/question-feeds/{grammarQuestionFeed}', [GrammarQuestionFeedAdminController::class, 'update']);
+            Route::delete('grammar/question-feeds/{grammarQuestionFeed}', [GrammarQuestionFeedAdminController::class, 'destroy']);
+            Route::post('grammar/question-feeds/{grammarQuestionFeed}/crawl', [GrammarQuestionFeedAdminController::class, 'crawl']);
+
             Route::get('exams', [ExamAdminController::class, 'index']);
             Route::post('exams', [ExamAdminController::class, 'store']);
             Route::get('exams/{exam}', [ExamAdminController::class, 'show']);
@@ -119,6 +144,22 @@ Route::prefix('v1')->group(function (): void {
             Route::get('seo/validate', [AdminSeoController::class, 'validate']);
             Route::get('seo/preview', [AdminSeoController::class, 'preview']);
             Route::post('seo/assets', [AdminSeoController::class, 'uploadAsset']);
+
+            Route::get('static-pages', [StaticPageAdminController::class, 'index']);
+            Route::post('static-pages', [StaticPageAdminController::class, 'store']);
+            Route::patch('static-pages/{staticPage}', [StaticPageAdminController::class, 'update']);
+            Route::delete('static-pages/{staticPage}', [StaticPageAdminController::class, 'destroy']);
+
+            Route::get('content-posts', [ContentPostAdminController::class, 'index']);
+            Route::post('content-posts', [ContentPostAdminController::class, 'store']);
+            Route::patch('content-posts/{contentPost}', [ContentPostAdminController::class, 'update']);
+            Route::delete('content-posts/{contentPost}', [ContentPostAdminController::class, 'destroy']);
+
+            Route::get('sitemap/overview', [SitemapAdminController::class, 'overview']);
+            Route::get('sitemap/custom', [SitemapAdminController::class, 'customIndex']);
+            Route::post('sitemap/custom', [SitemapAdminController::class, 'customStore']);
+            Route::patch('sitemap/custom/{seoSitemapUrl}', [SitemapAdminController::class, 'customUpdate']);
+            Route::delete('sitemap/custom/{seoSitemapUrl}', [SitemapAdminController::class, 'customDestroy']);
 
             Route::get('roles', [RoleController::class, 'index']);
             Route::post('roles', [RoleController::class, 'store']);

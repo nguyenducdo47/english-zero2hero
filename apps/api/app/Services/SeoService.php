@@ -4,6 +4,9 @@ namespace App\Services;
 
 use App\Models\SeoGlobal;
 use App\Models\SeoPage;
+use App\Models\SeoSitemapUrl;
+use App\Models\ContentPost;
+use App\Models\StaticPage;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
@@ -77,6 +80,11 @@ class SeoService
             if (! empty($meta['published_only'])) {
                 $query->where('is_published', true);
             }
+            if (! empty($meta['scope']) && is_array($meta['scope'])) {
+                foreach ($meta['scope'] as $column => $value) {
+                    $query->where($column, $value);
+                }
+            }
             foreach ($query->orderBy('slug')->pluck($meta['slug_column']) as $slug) {
                 $routeKey = str_replace('{slug}', $slug, $meta['pattern']);
                 $path = str_replace('{slug}', $slug, $meta['path_pattern']);
@@ -120,14 +128,61 @@ class SeoService
         $noindex = $this->pathIsNoindex($path, $global, $page);
 
         $dynamic = str_starts_with($routeKey, 'grammar.tense.')
-            || str_starts_with($routeKey, 'exams.');
+            || str_starts_with($routeKey, 'exams.')
+            || str_starts_with($routeKey, 'page.')
+            || str_starts_with($routeKey, 'blog.')
+            || str_starts_with($routeKey, 'news.');
+
+        $staticPage = null;
+        if (str_starts_with($routeKey, 'page.')) {
+            $pageSlug = Str::after($routeKey, 'page.');
+            $staticPage = StaticPage::query()->where('slug', $pageSlug)->first();
+            if ($staticPage === null || ! $staticPage->is_published) {
+                $noindex = true;
+            }
+        }
+
+        $contentPost = null;
+        if (str_starts_with($routeKey, 'blog.')) {
+            $postSlug = Str::after($routeKey, 'blog.');
+            $contentPost = ContentPost::query()
+                ->where('channel', ContentPost::CHANNEL_BLOG)
+                ->where('slug', $postSlug)
+                ->first();
+            if ($contentPost === null || ! $contentPost->is_published) {
+                $noindex = true;
+            }
+        } elseif (str_starts_with($routeKey, 'news.')) {
+            $postSlug = Str::after($routeKey, 'news.');
+            $contentPost = ContentPost::query()
+                ->where('channel', ContentPost::CHANNEL_NEWS)
+                ->where('slug', $postSlug)
+                ->first();
+            if ($contentPost === null || ! $contentPost->is_published) {
+                $noindex = true;
+            }
+        }
 
         $title = $page?->title;
+        if ($title === null && $staticPage !== null) {
+            $title = $staticPage->localized('title', null, $locale);
+        }
+        if ($title === null && $contentPost !== null) {
+            $title = $contentPost->localized('title', null, $locale);
+        }
         if ($title === null && ! $dynamic) {
             $title = $global->default_title ?? $global->site_name;
         }
 
         $description = $page?->description;
+        if ($description === null && $staticPage !== null) {
+            $excerpt = $staticPage->localized('excerpt', null, $locale);
+            $description = is_string($excerpt) ? StaticPageService::excerptPlain($excerpt) : null;
+        }
+        if ($description === null && $contentPost !== null) {
+            $excerpt = $contentPost->localized('excerpt', null, $locale);
+            $description = is_string($excerpt) ? StaticPageService::excerptPlain($excerpt) : null;
+        }
         if ($description === null && ! $dynamic) {
             $description = $global->default_description;
         }
@@ -135,7 +190,7 @@ class SeoService
         $ogDescription = $page?->og_description ?? $global->og_description ?? $description;
         $ogImage = $page?->og_image_url ?? $global->og_image_url;
 
-        $canonicalBase = rtrim($global->canonical_base ?: config('app.url', ''), '/');
+        $canonicalBase = $this->canonicalBase();
         $canonicalPath = $page?->canonical_path ?? $this->localizePath($path, $locale, $global->default_locale);
         $canonical = $canonicalBase !== '' ? $canonicalBase.$canonicalPath : null;
 
@@ -329,13 +384,63 @@ class SeoService
         return $issues;
     }
 
+    public function canonicalBase(): string
+    {
+        $global = $this->globalSettings();
+        $base = $global->canonical_base
+            ?: config('e2h.frontend_url')
+            ?: config('app.url', '');
+
+        return rtrim((string) $base, '/');
+    }
+
+    public function localizedAbsoluteUrl(string $path, string $locale): string
+    {
+        $global = $this->globalSettings();
+
+        return $this->canonicalBase().$this->localizePath($path, $locale, $global->default_locale);
+    }
+
     /**
-     * @return array<int, array{url: string, lastModified?: string, index: bool}>
+     * @return array<int, array{url: string, lastModified?: string, index: bool, priority?: float, changefreq?: string, source?: string}>
      */
     public function sitemapEntries(): array
     {
-        $global = $this->globalSettings();
-        $base = rtrim($global->canonical_base ?: config('app.url', ''), '/');
+        $entries = [];
+
+        foreach ($this->sitemapRegistryEntries() as $row) {
+            $entries[] = [
+                'url' => $row['url'],
+                'lastModified' => $row['lastModified'],
+                'index' => true,
+                'source' => 'registry',
+            ];
+        }
+
+        foreach ($this->sitemapCustomEntries() as $row) {
+            $entry = [
+                'url' => $row['url'],
+                'lastModified' => $row['lastModified'],
+                'index' => true,
+                'source' => 'custom',
+            ];
+            if (isset($row['priority'])) {
+                $entry['priority'] = $row['priority'];
+            }
+            if (isset($row['changefreq'])) {
+                $entry['changefreq'] = $row['changefreq'];
+            }
+            $entries[] = $entry;
+        }
+
+        return $entries;
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function sitemapRegistryEntries(): array
+    {
         $entries = [];
 
         foreach ($this->registry() as $item) {
@@ -347,17 +452,80 @@ class SeoService
                 if (! ($resolved['robots']['index'] ?? true)) {
                     continue;
                 }
-                $localized = $base.$this->localizePath($item['path'], $locale, $global->default_locale);
+                $localized = $this->localizedAbsoluteUrl($item['path'], $locale);
                 $page = SeoPage::query()->where('route_key', $item['route_key'])->where('locale', $locale)->first();
                 $entries[] = [
                     'url' => $localized,
                     'lastModified' => $page?->updated_at?->toAtomString(),
-                    'index' => true,
+                    'route_key' => $item['route_key'],
+                    'locale' => $locale,
+                    'label' => $item['label'] ?? $item['route_key'],
                 ];
             }
         }
 
         return $entries;
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function sitemapCustomEntries(): array
+    {
+        if (! Schema::hasTable('seo_sitemap_urls')) {
+            return [];
+        }
+
+        $global = $this->globalSettings();
+        $defaultLocale = $global->default_locale;
+        $entries = [];
+
+        $rows = SeoSitemapUrl::query()
+            ->where('is_enabled', true)
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
+
+        foreach ($rows as $row) {
+            $loc = trim($row->loc);
+            $locales = $row->locale ? [$row->locale] : ['vi', 'en'];
+
+            if (str_starts_with($loc, 'http://') || str_starts_with($loc, 'https://')) {
+                $url = $loc;
+                $entries[] = $this->customEntryShape($row, $url, $row->locale);
+                continue;
+            }
+
+            $path = $loc !== '' && ! str_starts_with($loc, '/') ? '/'.$loc : $loc;
+
+            foreach ($locales as $locale) {
+                $url = $this->canonicalBase().$this->localizePath($path, $locale, $defaultLocale);
+                $entries[] = $this->customEntryShape($row, $url, $locale);
+            }
+        }
+
+        return $entries;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function customEntryShape(SeoSitemapUrl $row, string $url, ?string $locale): array
+    {
+        $out = [
+            'url' => $url,
+            'lastModified' => $row->updated_at?->toAtomString(),
+            'custom_id' => $row->id,
+            'locale' => $locale,
+        ];
+        if ($row->priority !== null) {
+            $out['priority'] = (float) $row->priority;
+        }
+        if ($row->changefreq) {
+            $out['changefreq'] = $row->changefreq;
+        }
+
+        return $out;
     }
 
     public function robotsRules(): array
@@ -378,7 +546,7 @@ class SeoService
             'rules' => [
                 ['userAgent' => '*', 'allow' => '/', 'disallow' => $disallow],
             ],
-            'sitemap' => rtrim($global->canonical_base ?: config('app.url', ''), '/').'/sitemap.xml',
+            'sitemap' => $this->canonicalBase().'/sitemap.xml',
         ];
     }
 
@@ -416,11 +584,24 @@ class SeoService
         if (count($segments) >= 2 && $segments[0] === 'exams') {
             return 'exams.'.$segments[1];
         }
+        if (count($segments) >= 2 && $segments[0] === 'blog') {
+            return 'blog.'.$segments[1];
+        }
+        if (count($segments) >= 2 && $segments[0] === 'news') {
+            return 'news.'.$segments[1];
+        }
 
         foreach (config('seo_routes.static', []) as $row) {
             $static = trim($row['path'], '/');
             if ($static === $normalized || ($row['path'] === '/' && $path === '/')) {
                 return $row['route_key'];
+            }
+        }
+
+        if (count($segments) === 1) {
+            $slug = $segments[0];
+            if (! in_array($slug, config('static_pages.reserved_slugs', []), true)) {
+                return 'page.'.$slug;
             }
         }
 
@@ -449,6 +630,24 @@ class SeoService
             $slug = Str::after($routeKey, 'exams.');
 
             return '/exams/'.$slug;
+        }
+
+        if (str_starts_with($routeKey, 'page.')) {
+            $slug = Str::after($routeKey, 'page.');
+
+            return '/'.$slug;
+        }
+
+        if (str_starts_with($routeKey, 'blog.')) {
+            $slug = Str::after($routeKey, 'blog.');
+
+            return '/blog/'.$slug;
+        }
+
+        if (str_starts_with($routeKey, 'news.')) {
+            $slug = Str::after($routeKey, 'news.');
+
+            return '/news/'.$slug;
         }
 
         return null;

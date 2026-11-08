@@ -44,14 +44,19 @@ class GrammarService extends BaseService
         return $this->envelope(new TenseResource($tense));
     }
 
-    public function quizForGroup(string $groupSlug, int $limit): array
+    public function quizForGroup(string $groupSlug, int $requestedLimit): array
     {
-        $limit = min(20, max(5, $limit));
+        $min = (int) config('grammar.group_quiz.min_limit', 1);
+        $max = (int) config('grammar.group_quiz.max_limit', 30);
+        $requestedLimit = max($min, min($max, $requestedLimit));
+
         $group = $this->tenseGroups->findBySlugWithTranslations($groupSlug);
+        $poolTotal = $this->questions->countGrammarForGroup($group);
+        $limit = min($requestedLimit, $poolTotal);
 
         $locale = app()->getLocale();
         $questions = $this->questions
-            ->randomGrammarQuizForGroup($group, $limit)
+            ->randomGrammarQuizForGroup($group, max(0, $limit))
             ->map(function (Question $q) use ($locale) {
                 $promptEn = $q->localized('prompt', null, 'en')
                     ?? $q->localized('prompt', null, config('app.fallback_locale'));
@@ -71,12 +76,73 @@ class GrammarService extends BaseService
                 return $item;
             });
 
-        return $this->envelope([
-            'group' => [
-                'slug' => $group->slug,
-                'name' => $group->localized('name'),
+        return [
+            'data' => [
+                'group' => [
+                    'slug' => $group->slug,
+                    'name' => $group->localized('name'),
+                ],
+                'questions' => $questions,
             ],
-            'questions' => $questions,
-        ]);
+            'meta' => array_merge($this->apiMeta(), [
+                'pool_total' => $poolTotal,
+                'served_count' => $questions->count(),
+                'requested_limit' => $requestedLimit,
+            ]),
+        ];
+    }
+
+    public function quizForTense(string $tenseSlug, int $requestedLimit): array
+    {
+        $min = (int) config('grammar.group_quiz.min_limit', 1);
+        $max = (int) config('grammar.group_quiz.max_limit', 30);
+        $requestedLimit = max($min, min($max, $requestedLimit));
+
+        $tense = $this->tenses->findBySlugWithGroup($tenseSlug);
+        $poolTotal = $this->questions->countGrammarForTense($tense);
+        $limit = min($requestedLimit, $poolTotal);
+
+        $locale = app()->getLocale();
+        $questions = $this->questions
+            ->randomGrammarQuizForTense($tense, max(0, $limit))
+            ->map(function (Question $q) use ($locale) {
+                $promptEn = $q->localized('prompt', null, 'en')
+                    ?? $q->localized('prompt', null, config('app.fallback_locale'));
+                $item = [
+                    'id' => $q->id,
+                    'type' => $q->type,
+                    'prompt_en' => $promptEn,
+                    'options' => $q->type === 'multiple_choice' ? ($q->payload['options'] ?? []) : null,
+                ];
+                if ($locale !== 'en') {
+                    $translated = $q->localized('prompt', null, $locale);
+                    if ($translated && $translated !== $promptEn) {
+                        $item['prompt_locale'] = $translated;
+                    }
+                }
+
+                return $item;
+            });
+
+        $group = $tense->group;
+
+        return [
+            'data' => [
+                'tense' => [
+                    'slug' => $tense->slug,
+                    'name' => $tense->localized('name'),
+                ],
+                'group' => $group ? [
+                    'slug' => $group->slug,
+                    'name' => $group->localized('name'),
+                ] : null,
+                'questions' => $questions,
+            ],
+            'meta' => array_merge($this->apiMeta(), [
+                'pool_total' => $poolTotal,
+                'served_count' => $questions->count(),
+                'requested_limit' => $requestedLimit,
+            ]),
+        ];
     }
 }

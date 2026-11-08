@@ -10,6 +10,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import type { QuizQuestion } from "@/components/learning/quiz-question-step";
 
 export type QuizResultRow = {
   question_id: number;
@@ -24,9 +25,19 @@ type Props = {
   maxScore: number;
   results: QuizResultRow[];
   grammarHref: string;
+  questions?: QuizQuestion[];
+  userAnswers?: Record<number, string | number>;
 };
 
-export function QuizResults({ groupName, score, maxScore, results, grammarHref }: Props) {
+export function QuizResults({
+  groupName,
+  score,
+  maxScore,
+  results,
+  grammarHref,
+  questions,
+  userAnswers,
+}: Props) {
   const t = useTranslations("quiz");
   const pct = maxScore > 0 ? Math.round((score / maxScore) * 100) : 0;
 
@@ -43,7 +54,12 @@ export function QuizResults({ groupName, score, maxScore, results, grammarHref }
       </Alert>
 
       <ul className="space-y-3">
-        {results.map((r, idx) => (
+        {results.map((r, idx) => {
+          const question = questions?.find((q) => q.id === r.question_id);
+          const yourAnswer = formatUserAnswer(question, userAnswers?.[r.question_id]);
+          const correctText = formatCorrectAnswer(r.correct_answer);
+
+          return (
           <li key={r.question_id}>
             <Card
               className={cn(
@@ -65,12 +81,23 @@ export function QuizResults({ groupName, score, maxScore, results, grammarHref }
                 </Badge>
               </CardHeader>
               <CardContent className="space-y-2 p-4 pt-0 text-sm">
+                {yourAnswer !== null ? (
+                  <p className="text-muted-foreground">
+                    {t("yourAnswer")}{" "}
+                    <span
+                      className={cn(
+                        "font-medium",
+                        r.is_correct ? "text-secondary" : "text-foreground",
+                      )}
+                    >
+                      {yourAnswer}
+                    </span>
+                  </p>
+                ) : null}
                 {!r.is_correct && (
                   <p className="text-muted-foreground">
                     {t("correctAnswer")}{" "}
-                    <span className="font-medium text-foreground">
-                      {formatAnswer(r.correct_answer)}
-                    </span>
+                    <span className="font-medium text-foreground">{correctText}</span>
                   </p>
                 )}
                 {r.explanation ? (
@@ -83,7 +110,8 @@ export function QuizResults({ groupName, score, maxScore, results, grammarHref }
               </CardContent>
             </Card>
           </li>
-        ))}
+          );
+        })}
       </ul>
 
       <Link href={grammarHref} className={cn(buttonVariants({ variant: "outline" }))}>
@@ -93,11 +121,30 @@ export function QuizResults({ groupName, score, maxScore, results, grammarHref }
   );
 }
 
-function formatAnswer(answer: unknown): string {
+function formatCorrectAnswer(answer: unknown): string {
   if (answer === null || answer === undefined) return "—";
-  if (typeof answer === "object" && answer !== null && "index" in answer) {
-    return String((answer as { index: number }).index);
+  if (typeof answer === "object" && answer !== null) {
+    const row = answer as { text?: string | null; index?: number };
+    if (typeof row.text === "string" && row.text.trim() !== "") {
+      return row.text;
+    }
+    if (row.index !== undefined && row.index !== null) {
+      return String(row.index);
+    }
+    return "—";
   }
-  if (typeof answer === "object") return JSON.stringify(answer);
   return String(answer);
+}
+
+function formatUserAnswer(
+  question: QuizQuestion | undefined,
+  value: string | number | undefined,
+): string | null {
+  if (value === undefined || value === "") return null;
+  if (question?.type === "multiple_choice" && question.options?.length) {
+    const idx = Number(value);
+    if (Number.isNaN(idx)) return String(value);
+    return question.options[idx] ?? String(value);
+  }
+  return String(value);
 }

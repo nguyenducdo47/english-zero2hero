@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { QuizRunner } from "@/components/quiz-runner";
 import { apiGet } from "@/lib/api";
 import type { Locale } from "@/i18n/routing";
+import { GRAMMAR_GROUP_QUIZ_LIMIT } from "@/lib/grammar-quiz";
 import { toast } from "@/lib/toast";
 
 type Question = {
@@ -26,6 +27,7 @@ export function GroupQuizLoader({
   const t = useTranslations("grammar");
   const tToast = useTranslations("toast");
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [poolHint, setPoolHint] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
   const notified = useRef(false);
 
@@ -33,9 +35,22 @@ export function GroupQuizLoader({
     let cancelled = false;
     apiGet<{
       data: { questions: Question[] };
-    }>(`/api/v1/grammar/tense-groups/${slug}/quiz?limit=10`, locale)
+      meta?: { pool_total?: number; served_count?: number; requested_limit?: number };
+    }>(
+      `/api/v1/grammar/tense-groups/${slug}/quiz?limit=${GRAMMAR_GROUP_QUIZ_LIMIT}`,
+      locale,
+    )
       .then((res) => {
-        if (!cancelled) setQuestions(res.data.questions);
+        if (!cancelled) {
+          setQuestions(res.data.questions);
+          const served = res.meta?.served_count ?? res.data.questions.length;
+          const requested = res.meta?.requested_limit ?? GRAMMAR_GROUP_QUIZ_LIMIT;
+          if (served < requested) {
+            setPoolHint(t("quizPoolHint", { served, requested }));
+          } else {
+            setPoolHint(null);
+          }
+        }
       })
       .catch(() => {
         if (!cancelled) {
@@ -60,6 +75,11 @@ export function GroupQuizLoader({
   }
 
   return (
-    <QuizRunner groupSlug={slug} groupName={groupName} questions={questions} />
+    <div className="space-y-3">
+      {poolHint ? (
+        <p className="text-center text-sm text-muted-foreground">{poolHint}</p>
+      ) : null}
+      <QuizRunner groupSlug={slug} groupName={groupName} questions={questions} />
+    </div>
   );
 }

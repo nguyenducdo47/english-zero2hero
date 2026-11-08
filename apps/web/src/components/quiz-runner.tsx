@@ -92,6 +92,8 @@ export function QuizRunner({ groupSlug, groupName, questions }: Props) {
         maxScore={done.max_score}
         results={done.results}
         grammarHref="/grammar"
+        questions={questions}
+        userAnswers={answers}
       />
     );
   }

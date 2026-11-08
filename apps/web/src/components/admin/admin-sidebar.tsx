@@ -124,7 +124,7 @@ export function AdminSidebar({
       ) : null}
       <aside
         className={cn(
-          "admin-root z-50 flex h-dvh max-h-dvh shrink-0 flex-col overflow-hidden border-r border-[var(--admin-border)] bg-[var(--admin-sidebar-bg)] transition-transform",
+          "z-50 flex h-dvh max-h-dvh shrink-0 flex-col overflow-hidden border-r border-[var(--admin-border)] bg-[var(--admin-sidebar-bg)] transition-transform",
           "fixed inset-y-0 left-0 lg:sticky lg:top-0 lg:z-30 lg:translate-x-0",
           collapsed ? "w-[72px]" : "w-[260px]",
           mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
