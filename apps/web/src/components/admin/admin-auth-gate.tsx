@@ -2,13 +2,10 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { fetchAuthMe, userHasAdminAccess, type AuthUser } from "@/lib/progress-sync";
 import { useAuthToken } from "@/hooks/use-auth-token";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { HttpStatusPageI18n } from "@/components/errors/http-status-page-i18n";
 
 export function AdminAuthGate({ children }: { children: ReactNode }) {
   const t = useTranslations("admin");
@@ -34,33 +31,34 @@ export function AdminAuthGate({ children }: { children: ReactNode }) {
 
   if (!token) {
     return (
-      <Alert>
-        <AlertTitle>{t("loginRequired")}</AlertTitle>
-        <AlertDescription className="flex flex-wrap items-center gap-2">
-          {t("loginRequiredDesc")}
-          <Link href="/login" className={cn(buttonVariants({ size: "sm" }))}>
-            {t("loginLink")}
-          </Link>
-        </AlertDescription>
-      </Alert>
+      <HttpStatusPageI18n
+        code={401}
+        primaryCta="login"
+        showLogin
+        showHome
+      />
     );
   }
 
   if (user === undefined) {
-    return <p className="text-sm text-[var(--admin-text-muted)]">{t("loading")}</p>;
+    return (
+      <div
+        className="flex min-h-dvh items-center justify-center bg-background text-sm text-muted-foreground motion-reduce:transition-none"
+        role="status"
+      >
+        {t("loading")}
+      </div>
+    );
   }
 
-  if (!userHasAdminAccess(user)) {
+  if (!user || !userHasAdminAccess(user)) {
     return (
-      <Alert variant="destructive">
-        <AlertTitle>{t("forbiddenTitle")}</AlertTitle>
-        <AlertDescription className="space-y-2">
-          {t("forbiddenDesc")}
-          <Link href="/dashboard" className={cn(buttonVariants({ variant: "outline", size: "sm" }))}>
-            {t("backPortal")}
-          </Link>
-        </AlertDescription>
-      </Alert>
+      <HttpStatusPageI18n
+        code={403}
+        primaryCta="dashboard"
+        showDashboard
+        showHome
+      />
     );
   }
 
